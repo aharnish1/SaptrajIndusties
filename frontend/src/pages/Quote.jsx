@@ -1,87 +1,123 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Input from '../components/UI/Input';
-import Button from '../components/UI/Button';
 import FileUpload from '../components/UI/FileUpload';
 import { Toaster, toast } from 'react-hot-toast';
-import { Upload, Loader2, CheckCircle, X, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle, X, AlertCircle } from 'lucide-react';
+import { inquiriesAPI } from '../services/api';
 
 const Quote = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionModal, setSubmissionModal] = useState({ isOpen: false, type: 'success', message: '' });
+
+  const [submissionModal, setSubmissionModal] = useState({
+    isOpen: false,
+    type: 'success',
+    message: '',
+  });
+
   const formRef = useRef(null);
+
   const [resetUploadTrigger, setResetUploadTrigger] = useState(0);
 
-  const handleFilesChange = (files) => {
-    setUploadedFiles(files);
+  const [formData, setFormData] = useState({
+    q_name: '',
+    q_company: '',
+    q_email: '',
+    q_phone: '',
+    q_material: '',
+    q_qty: '',
+    q_details: '',
+  });
+
+  // FIXED: useCallback prevents unnecessary re-renders
+  const handleFilesChange = useCallback((files) => {
+    setUploadedFiles(files || []);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
   const resetForm = () => {
-    // Reset form fields
-    if (formRef.current) {
-      formRef.current.reset();
-    }
-    
-    // Reset uploaded files state
+    setFormData({
+      q_name: '',
+      q_company: '',
+      q_email: '',
+      q_phone: '',
+      q_material: '',
+      q_qty: '',
+      q_details: '',
+    });
+
     setUploadedFiles([]);
-    
-    // Reset FileUpload component state
-    setResetUploadTrigger(prev => prev + 1);
-    
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    setResetUploadTrigger((prev) => prev + 1);
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (isSubmitting) return; // Prevent duplicate submissions
-    
-    setIsSubmitting(true);
-    
+
+    if (isSubmitting) return;
+
     try {
-      // Get form data
-      const formData = new FormData(e.target);
-      const formObject = Object.fromEntries(formData.entries());
+      setIsSubmitting(true);
+
+      const submitData = new FormData();
+
+      submitData.append('name', formData.q_name);
+      submitData.append('company', formData.q_company);
+      submitData.append('email', formData.q_email);
+      submitData.append('phone', formData.q_phone);
+      submitData.append('requirement', formData.q_details);
+      submitData.append('materialType', formData.q_material || '');
+      submitData.append('quantity', formData.q_qty || '');
+      submitData.append('message', formData.q_details);
+
+      // FIXED: Handle FileUpload component files properly
+      if (uploadedFiles?.length > 0) {
+        const fileObj = uploadedFiles[0];
+        
+        // FileUpload component provides fileObj.file as the actual File object
+        if (fileObj.file instanceof File) {
+          submitData.append('attachment', fileObj.file);
+          console.log('🔍 Appending file to FormData:', fileObj.file);
+        } else {
+          console.error('🔍 File object is not a File:', fileObj);
+        }
+      }
+
+      console.log('Submitting quote request...');
+      console.log('Files:', uploadedFiles);
       
-      // Add uploaded files information
-      const filesData = uploadedFiles.map(file => ({
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        url: file.url,
-        filename: file.filename
-      }));
-      
-      // Prepare submission data
-      const submissionData = {
-        ...formObject,
-        files: filesData,
-        submittedAt: new Date().toISOString()
-      };
-      
-      // Simulate API call (replace with actual backend call)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulate success (replace with actual API response handling)
-      const response = { success: true, message: 'Quote request submitted successfully' };
-      
-      if (response.success) {
-        // Show success modal
+      // Debug FormData content
+      console.log('FormData entries:');
+      for (let pair of submitData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      const response = await inquiriesAPI.create(submitData);
+
+      console.log('Quote submission response:', response);
+
+      if (response?.success) {
         setSubmissionModal({
           isOpen: true,
           type: 'success',
-          message: '✅ Quote Request Submitted Successfully. Our team will contact you shortly.'
+          message:
+            '✅ Quote Request Submitted Successfully. Our team will contact you shortly.',
         });
-        
-        // Reset form after delay
-        setTimeout(() => {
-          resetForm();
-          setSubmissionModal({ isOpen: false, type: '', message: '' });
-        }, 2000);
-        
-        // Show success toast
+
         toast.success('Quote request submitted successfully!', {
           duration: 4000,
           icon: '🎉',
@@ -91,20 +127,29 @@ const Quote = () => {
             border: '1px solid #FFD000',
           },
         });
+
+        resetForm();
+
+        setTimeout(() => {
+          setSubmissionModal({
+            isOpen: false,
+            type: '',
+            message: '',
+          });
+        }, 2500);
       }
-      
     } catch (error) {
       console.error('Form submission error:', error);
-      
-      // Show error modal
+
       setSubmissionModal({
         isOpen: true,
         type: 'error',
-        message: `❌ Submission failed: ${error.message || 'Please try again later.'}`
+        message: `❌ Submission failed: ${
+          error?.message || 'Please try again later.'
+        }`,
       });
-      
-      // Show error toast
-      toast.error('Failed to submit quote request. Please try again.', {
+
+      toast.error('Failed to submit quote request.', {
         duration: 5000,
         icon: '🚫',
         style: {
@@ -113,7 +158,6 @@ const Quote = () => {
           border: '1px solid #ef4444',
         },
       });
-      
     } finally {
       setIsSubmitting(false);
     }
@@ -121,44 +165,120 @@ const Quote = () => {
 
   return (
     <div className="w-full">
+      {/* Hero */}
       <div className="bg-gunmetal-gray py-20 border-b border-[#333]">
         <div className="container mx-auto px-6 md:px-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">Request a Quote</h1>
-          <p className="text-gray-400 max-w-2xl mx-auto">Provide your requirement details and our engineering team will get back to you with a comprehensive proposal.</p>
+          <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">
+            Request a Quote
+          </h1>
+
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Provide your requirement details and our engineering team
+            will get back to you with a comprehensive proposal.
+          </p>
         </div>
       </div>
-      
+
+      {/* Form */}
       <section className="py-24 bg-deep-black">
         <div className="container mx-auto px-6 md:px-12 max-w-4xl">
           <div className="bg-[#0A0A0A] border border-gunmetal-gray p-8 rounded-lg relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-industrial-yellow"></div>
-            
-            <form ref={formRef} className="space-y-8" onSubmit={handleSubmit}>
-              {/* Personal Details */}
+
+            <form
+              ref={formRef}
+              className="space-y-8"
+              onSubmit={handleSubmit}
+            >
+              {/* Contact Info */}
               <div>
-                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">1. Contact Information</h3>
+                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">
+                  1. Contact Information
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Full Name*" id="q_name" placeholder="John Doe" required />
-                  <Input label="Company Name*" id="q_company" placeholder="ABC Manufacturing" required />
-                  <Input label="Email Address*" id="q_email" type="email" placeholder="john@example.com" required />
-                  <Input label="Phone Number*" id="q_phone" placeholder="+91 XXXXXXXXXX" required />
+                  <Input
+                    label="Full Name*"
+                    id="q_name"
+                    value={formData.q_name}
+                    onChange={handleInputChange}
+                    placeholder="John Doe"
+                    required
+                  />
+
+                  <Input
+                    label="Company Name*"
+                    id="q_company"
+                    value={formData.q_company}
+                    onChange={handleInputChange}
+                    placeholder="ABC Manufacturing"
+                    required
+                  />
+
+                  <Input
+                    label="Email Address*"
+                    id="q_email"
+                    type="email"
+                    value={formData.q_email}
+                    onChange={handleInputChange}
+                    placeholder="john@example.com"
+                    required
+                  />
+
+                  <Input
+                    label="Phone Number*"
+                    id="q_phone"
+                    value={formData.q_phone}
+                    onChange={handleInputChange}
+                    placeholder="+91 XXXXXXXXXX"
+                    required
+                  />
                 </div>
               </div>
 
-              {/* Requirement Details */}
+              {/* Project Specs */}
               <div>
-                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">2. Project Specifications</h3>
+                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">
+                  2. Project Specifications
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <Input label="Material Type" id="q_material" placeholder="e.g. Mild Steel, Stainless Steel, Aluminum" />
-                  <Input label="Estimated Quantity" id="q_qty" type="number" placeholder="100" />
+                  <Input
+                    label="Material Type"
+                    id="q_material"
+                    value={formData.q_material}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Mild Steel"
+                  />
+
+                  <Input
+                    label="Estimated Quantity"
+                    id="q_qty"
+                    type="number"
+                    value={formData.q_qty}
+                    onChange={handleInputChange}
+                    placeholder="100"
+                  />
                 </div>
-                <Input label="Detailed Requirements*" id="q_details" type="textarea" placeholder="Please describe the project, dimensions, and specific fabrication processes required..." required />
+
+                <Input
+                  label="Detailed Requirements*"
+                  id="q_details"
+                  type="textarea"
+                  value={formData.q_details}
+                  onChange={handleInputChange}
+                  placeholder="Describe your project..."
+                  required
+                />
               </div>
 
-              {/* File Uploads */}
+              {/* File Upload */}
               <div>
-                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">3. Technical Drawings</h3>
-                <FileUpload 
+                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">
+                  3. Technical Drawings
+                </h3>
+
+                <FileUpload
                   resetTrigger={resetUploadTrigger}
                   onFilesChange={handleFilesChange}
                   maxFiles={10}
@@ -166,159 +286,99 @@ const Quote = () => {
                 />
               </div>
 
+              {/* Submit */}
               <div className="pt-4">
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                  className={`
-                    w-full md:w-auto px-12 py-4 text-lg font-semibold rounded-lg
-                    transition-all duration-300 relative overflow-hidden
-                    ${isSubmitting 
-                      ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
-                      : 'bg-industrial-yellow text-deep-black hover:bg-industrial-yellow/90 hover:shadow-lg hover:shadow-industrial-yellow/25'
-                    }
-                  `}
+                  className={`w-full md:w-auto px-12 py-4 text-lg font-semibold rounded-lg transition-all duration-300
+                  ${
+                    isSubmitting
+                      ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                      : 'bg-industrial-yellow text-deep-black hover:bg-industrial-yellow/90'
+                  }`}
                 >
-                  {isSubmitting && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="absolute inset-0 flex items-center justify-center bg-gray-700"
-                    >
-                      <Loader2 size={20} className="animate-spin mr-2" />
-                      <span>Submitting Request...</span>
-                    </motion.div>
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center">
+                      <Loader2
+                        size={20}
+                        className="animate-spin mr-2"
+                      />
+                      Submitting...
+                    </div>
+                  ) : (
+                    'Submit Request'
                   )}
-                  
-                  <span className={isSubmitting ? 'opacity-0' : 'opacity-100'}>
-                    {isSubmitting ? 'Submitting Request...' : 'Submit Request'}
-                  </span>
                 </motion.button>
               </div>
             </form>
           </div>
         </div>
       </section>
-      
-      {/* Toast Notifications */}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#0A0A0A',
-            color: '#fff',
-            border: '1px solid #333',
-          },
-          success: {
-            iconTheme: {
-              primary: '#FFD000',
-              secondary: '#000',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#000',
-            },
-          },
-        }}
-      />
 
-      {/* Submission Success/Error Modal */}
+      {/* Toast */}
+      <Toaster position="top-right" />
+
+      {/* Modal */}
       <AnimatePresence>
         {submissionModal.isOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className={`
-                relative max-w-md mx-4 p-8 rounded-2xl border-2
-                ${submissionModal.type === 'success' 
-                  ? 'bg-[#0A0A0A] border-industrial-yellow shadow-lg shadow-industrial-yellow/25' 
-                  : 'bg-[#0A0A0A] border-red-500 shadow-lg shadow-red-500/25'
-                }
-              `}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className={`relative max-w-md mx-4 p-8 rounded-2xl border-2
+              ${
+                submissionModal.type === 'success'
+                  ? 'bg-[#0A0A0A] border-industrial-yellow'
+                  : 'bg-[#0A0A0A] border-red-500'
+              }`}
             >
-              {/* Close Button */}
               <button
-                onClick={() => setSubmissionModal({ isOpen: false, type: '', message: '' })}
-                className="absolute top-4 right-4 p-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white transition-colors"
+                onClick={() =>
+                  setSubmissionModal({
+                    isOpen: false,
+                    type: '',
+                    message: '',
+                  })
+                }
+                className="absolute top-4 right-4"
               >
                 <X size={20} />
               </button>
 
-              {/* Modal Content */}
               <div className="text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className={`
-                    w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6
-                    ${submissionModal.type === 'success' 
-                      ? 'bg-industrial-yellow/20' 
-                      : 'bg-red-500/20'
-                    }
-                  `}
-                >
+                <div className="mb-6 flex justify-center">
                   {submissionModal.type === 'success' ? (
-                    <CheckCircle size={32} className="text-industrial-yellow" />
+                    <CheckCircle
+                      size={40}
+                      className="text-industrial-yellow"
+                    />
                   ) : (
-                    <AlertCircle size={32} className="text-red-500" />
+                    <AlertCircle
+                      size={40}
+                      className="text-red-500"
+                    />
                   )}
-                </motion.div>
+                </div>
 
-                <motion.h3
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="text-2xl font-bold text-white mb-4"
-                >
-                  {submissionModal.type === 'success' ? 'Success!' : 'Submission Failed'}
-                </motion.h3>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  {submissionModal.type === 'success'
+                    ? 'Success!'
+                    : 'Submission Failed'}
+                </h3>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="text-gray-300 text-lg leading-relaxed"
-                >
+                <p className="text-gray-300">
                   {submissionModal.message}
-                </motion.p>
-
-                {submissionModal.type === 'error' && (
-                  <motion.button
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                    onClick={() => setSubmissionModal({ isOpen: false, type: '', message: '' })}
-                    className="mt-6 px-6 py-3 bg-industrial-yellow text-deep-black font-semibold rounded-lg hover:bg-industrial-yellow/90 transition-colors"
-                  >
-                    Try Again
-                  </motion.button>
-                )}
+                </p>
               </div>
-
-              {/* Success Glow Effect */}
-              {submissionModal.type === 'success' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 rounded-2xl bg-gradient-to-r from-industrial-yellow/10 to-transparent pointer-events-none"
-                />
-              )}
             </motion.div>
           </motion.div>
         )}

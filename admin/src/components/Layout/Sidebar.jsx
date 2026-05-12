@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Folders, MessageSquare, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, Folders, MessageSquare, Briefcase, Users, Settings, LogOut, UserPlus } from 'lucide-react';
 import logo from '../../assets/logo.png';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -18,6 +18,9 @@ const Sidebar = () => {
     { name: 'Products', path: '/products', icon: Package },
     { name: 'Projects', path: '/projects', icon: Folders },
     { name: 'Inquiries', path: '/inquiries', icon: MessageSquare },
+    { name: 'Careers', path: '/careers', icon: Briefcase },
+    { name: 'Applications', path: '/career-applications', icon: Users },
+    { name: 'Team Members', path: '/team-members', icon: UserPlus },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 

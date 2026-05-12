@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const connectDB = require('./config/database');
+const http = require('http');
+const { Server } = require('socket.io');
 const apiRoutes = require('./routes/api');
 const settingsRoutes = require('./routes/settingsRoutes');
 const statsRoutes = require('./routes/statsRoutes');
@@ -10,13 +13,71 @@ const uploadRoutes = require('./routes/uploadRoutes');
 // Load environment variables
 dotenv.config();
 
+// Connect to MongoDB
+connectDB();
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Create HTTP server for Socket.IO
+const server = http.createServer(app);
+
+// Configure Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174"
+    ],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true
+  }
+});
+
+// Store io instance in app for use in controllers
+app.set('io', io);
+
+// Socket.IO connection handling
+io.on('connection', (socket) => {
+  console.log('🔌 Socket.IO client connected:', socket.id);
+  
+  // Join admin room for notifications
+  socket.on('joinAdmin', () => {
+    socket.join('admin');
+    console.log('� Admin joined admin room:', socket.id);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('🔌 Socket.IO client disconnected:', socket.id);
+  });
+});
+
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:3000',  // Frontend
+      'http://localhost:5173',  // Frontend (Vite default)
+      'http://localhost:5174',  // Admin (Vite)
+      process.env.FRONTEND_URL,
+      process.env.ADMIN_URL
+    ].filter(Boolean);
+    
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsOptions));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -53,8 +114,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Start server with Socket.IO
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✅ Socket.IO enabled for real-time notifications`);
 });

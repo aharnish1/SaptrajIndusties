@@ -8,9 +8,18 @@ const TeamCard = ({ member }) => {
       {/* Member Image */}
       <div className="relative mb-4 overflow-hidden rounded-lg">
         <img
-          src={member.image}
+          src={
+            member.image
+              ? member.image.startsWith('http')
+                ? member.image
+                : `http://localhost:5000${member.image}`
+              : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.name || 'User') + '&background=0a0a0a&color=fff&size=200'
+          }
           alt={member.name}
           className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
+          onError={(e) => {
+            e.target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.name || 'User') + '&background=0a0a0a&color=fff&size=200';
+          }}
         />
         
         {/* Hover overlay */}

@@ -1,35 +1,45 @@
-const db = require('../data/mockData');
+const Project = require('../models/Project');
+const { deleteOldImage } = require('../config/multer');
 
 // Get all projects
-const getProjects = (req, res) => {
+const getProjects = async (req, res) => {
   try {
-    const { industry, status, search } = req.query;
-    let filteredProjects = [...db.projects];
-
-    if (industry && industry !== 'all') {
-      filteredProjects = filteredProjects.filter(project => 
-        project.industry.toLowerCase() === industry.toLowerCase()
-      );
+    const { category, status, featured, search, page = 1, limit = 10 } = req.query;
+    
+    // Build query
+    const query = {};
+    
+    if (category && category !== 'all') {
+      query.category = category;
     }
-
+    
     if (status && status !== 'all') {
-      filteredProjects = filteredProjects.filter(project => 
-        project.status.toLowerCase() === status.toLowerCase()
-      );
+      query.status = status;
     }
-
+    
+    if (featured !== undefined) {
+      query.featured = featured === 'true';
+    }
+    
     if (search) {
-      filteredProjects = filteredProjects.filter(project =>
-        project.title.toLowerCase().includes(search.toLowerCase()) ||
-        project.client.toLowerCase().includes(search.toLowerCase()) ||
-        project.description.toLowerCase().includes(search.toLowerCase())
-      );
+      query.$text = search;
     }
-
+    
+    // Execute query with pagination
+    const projects = await Project.find(query)
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+    
+    const total = await Project.countDocuments(query);
+    
     res.json({
       success: true,
-      data: filteredProjects,
-      count: filteredProjects.length
+      data: projects,
+      count: projects.length,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit)
     });
   } catch (error) {
     res.status(500).json({
@@ -41,9 +51,9 @@ const getProjects = (req, res) => {
 };
 
 // Get project by ID
-const getProjectById = (req, res) => {
+const getProjectById = async (req, res) => {
   try {
-    const project = db.projects.find(p => p.id === parseInt(req.params.id));
+    const project = await Project.findById(req.params.id);
     
     if (!project) {
       return res.status(404).json({
@@ -66,39 +76,58 @@ const getProjectById = (req, res) => {
 };
 
 // Create new project
-const createProject = (req, res) => {
+const createProject = async (req, res) => {
   try {
-    const { title, client, industry, description, technologies, duration, value, images } = req.body;
+    console.log('=== CREATE PROJECT DEBUG ===');
+    console.log('req.body:', req.body);
+    console.log('req.file:', req.file);
+    
+    const { 
+      title, 
+      category, 
+      client, 
+      description, 
+      technologies, 
+      location, 
+      completionDate, 
+      images, 
+      status, 
+      featured 
+    } = req.body;
+    
+    // Handle image upload
+    let imagePath = '';
+    if (req.file) {
+      imagePath = `uploads/projects/${req.file.filename}`;
+    }
 
-    if (!title || !client || !industry) {
+    if (!title || !category || !client) {
       return res.status(400).json({
         success: false,
-        message: 'Title, client, and industry are required'
+        message: 'Title, category, and client are required'
       });
     }
 
-    const newProject = {
-      id: Date.now(),
+    const newProject = new Project({
       title,
+      category,
       client,
-      industry,
       description: description || '',
-      technologies: technologies || [],
-      duration: duration || '',
-      value: value || '',
+      technologies: Array.isArray(technologies) ? technologies : (technologies ? technologies.split(',').map(tech => tech.trim()).filter(tech => tech) : []),
+      location: location || '',
+      completionDate: completionDate || null,
       images: images || [],
-      status: 'in-progress',
-      date: new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+      image: imagePath,
+      status: status || 'Active',
+      featured: featured || false
+    });
 
-    db.projects.push(newProject);
+    const savedProject = await newProject.save();
 
     res.status(201).json({
       success: true,
       message: 'Project created successfully',
-      data: newProject
+      data: savedProject
     });
   } catch (error) {
     res.status(500).json({
@@ -110,25 +139,61 @@ const createProject = (req, res) => {
 };
 
 // Update project
-const updateProject = (req, res) => {
+const updateProject = async (req, res) => {
   try {
-    const projectId = parseInt(req.params.id);
-    const projectIndex = db.projects.findIndex(p => p.id === projectId);
-
-    if (projectIndex === -1) {
+    console.log('=== UPDATE PROJECT DEBUG ===');
+    console.log('req.body:', req.body);
+    console.log('req.file:', req.file);
+    
+    const { 
+      title, 
+      category, 
+      client, 
+      description, 
+      technologies, 
+      location, 
+      completionDate, 
+      images, 
+      status, 
+      featured 
+    } = req.body;
+    
+    // Find the current project to get old image path
+    const currentProject = await Project.findById(req.params.id);
+    if (!currentProject) {
       return res.status(404).json({
         success: false,
         message: 'Project not found'
       });
     }
 
-    const updatedProject = {
-      ...db.projects[projectIndex],
-      ...req.body,
-      updatedAt: new Date().toISOString()
-    };
+    // Handle image upload
+    let imagePath = currentProject.image; // Keep existing image by default
+    if (req.file) {
+      // Delete old image if it exists
+      if (currentProject.image) {
+        await deleteOldImage(currentProject.image);
+      }
+      imagePath = `uploads/projects/${req.file.filename}`;
+    }
 
-    db.projects[projectIndex] = updatedProject;
+    const updatedProject = await Project.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        category,
+        client,
+        description,
+        technologies: Array.isArray(technologies) ? technologies : (technologies ? technologies.split(',').map(tech => tech.trim()).filter(tech => tech) : []),
+        location,
+        completionDate,
+        images,
+        image: imagePath,
+        status,
+        featured
+      },
+      { new: true, runValidators: true }
+    );
 
     res.json({
       success: true,
@@ -145,23 +210,26 @@ const updateProject = (req, res) => {
 };
 
 // Delete project
-const deleteProject = (req, res) => {
+const deleteProject = async (req, res) => {
   try {
-    const projectId = parseInt(req.params.id);
-    const projectIndex = db.projects.findIndex(p => p.id === projectId);
+    const deletedProject = await Project.findByIdAndDelete(req.params.id);
 
-    if (projectIndex === -1) {
+    if (!deletedProject) {
       return res.status(404).json({
         success: false,
         message: 'Project not found'
       });
     }
 
-    db.projects.splice(projectIndex, 1);
+    // Delete associated image if it exists
+    if (deletedProject.image) {
+      await deleteOldImage(deletedProject.image);
+    }
 
     res.json({
       success: true,
-      message: 'Project deleted successfully'
+      message: 'Project deleted successfully',
+      data: deletedProject
     });
   } catch (error) {
     res.status(500).json({
@@ -172,43 +240,74 @@ const deleteProject = (req, res) => {
   }
 };
 
-// Get project industries
-const getProjectIndustries = (req, res) => {
+// Get project categories
+const getProjectCategories = async (req, res) => {
   try {
-    const industries = [...new Set(db.projects.map(project => project.industry))];
+    const categories = await Project.distinct('category');
     
     res.json({
       success: true,
-      data: industries
+      data: categories
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error fetching industries',
+      message: 'Error fetching categories',
       error: error.message
     });
   }
 };
 
 // Get project statistics
-const getProjectStats = (req, res) => {
+const getProjectStats = async (req, res) => {
   try {
-    const stats = {
-      total: db.projects.length,
-      completed: db.projects.filter(p => p.status === 'completed').length,
-      inProgress: db.projects.filter(p => p.status === 'in-progress').length,
-      industries: [...new Set(db.projects.map(p => p.industry))].length
+    console.log('🔍 Project Stats Debug - Function called');
+    
+    // Safe count queries with fallbacks
+    const total = await Project.countDocuments().catch(() => 0);
+    const completed = await Project.countDocuments({ status: 'Completed' }).catch(() => 0);
+    const inProgress = await Project.countDocuments({ status: 'In Progress' }).catch(() => 0);
+    const active = await Project.countDocuments({ status: 'Active' }).catch(() => 0);
+    const onHold = await Project.countDocuments({ status: 'On Hold' }).catch(() => 0);
+    const featured = await Project.countDocuments({ featured: true }).catch(() => 0);
+    
+    const categories = await Project.distinct('category').catch(() => []);
+    
+    const result = {
+      total,
+      completed,
+      inProgress,
+      active,
+      onHold,
+      featured,
+      categories: categories.length
     };
+    
+    console.log('🔍 Project Stats Debug - Final result:', result);
 
-    res.json({
+    res.status(200).json({
       success: true,
-      data: stats
+      data: result
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching project statistics',
-      error: error.message
+    console.error('🔍 Project Stats Debug - Error occurred:', error);
+    console.error('🔍 Project Stats Debug - Error stack:', error.stack);
+    
+    // Return fallback data instead of crashing
+    const fallbackResult = {
+      total: 0,
+      completed: 0,
+      inProgress: 0,
+      active: 0,
+      onHold: 0,
+      featured: 0,
+      categories: 0
+    };
+    
+    res.status(200).json({
+      success: true,
+      data: fallbackResult,
+      warning: 'Using fallback data due to error'
     });
   }
 };
@@ -219,6 +318,6 @@ module.exports = {
   createProject,
   updateProject,
   deleteProject,
-  getProjectIndustries,
+  getProjectCategories,
   getProjectStats
 };

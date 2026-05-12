@@ -1,33 +1,14 @@
 import React from 'react';
-import { Bell, Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useState, useEffect, useRef } from 'react';
+import NotificationBell from '../NotificationBell';
 
 const Topbar = () => {
   const { logout } = useAuth();
-  const [showNotifications, setShowNotifications] = useState(false);
-  const notificationRef = useRef(null);
 
   const handleLogout = () => {
     logout();
   };
-
-  const handleNotificationClick = () => {
-    setShowNotifications(!showNotifications);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
-        setShowNotifications(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   return (
     <header className="h-20 bg-deep-black border-b border-gunmetal-gray flex items-center justify-between px-8 sticky top-0 z-10">
@@ -43,6 +24,8 @@ const Topbar = () => {
       </div>
 
       <div className="flex items-center gap-6">
+        {/* Notification Bell */}
+        <NotificationBell />
         
         <div className="flex items-center gap-3 border-l border-[#333] pl-6">
           <div className="w-8 h-8 rounded-full bg-industrial-yellow flex items-center justify-center text-deep-black font-bold">

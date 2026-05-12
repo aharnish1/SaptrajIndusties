@@ -1,0 +1,29 @@
++------------------+
+|    Processor     |
++------------------+
+| - currentMode    |
+| - databaseHandler|
++------------------+
+| + configure(mode: ModeIdentifier, db: DatabaseIdentifier): void |
+| + process(data: DataPoint): void                                 |
++------------------+
+            |
+            v
+   +---------------------+
+   |   DatabaseHandler   |<------------------+
+   +---------------------+                   |
+   | + connect(): void                       |
+   | + insert(data: DataPoint): void         |
+   | + validate(data: DataPoint): void       |
+   +---------------------+                   |
+            ^                                |
+  +---------+-----------+          +---------+----------+
+  |         |           |          |         |          |
+  v         v           v          v         v          v
++------------+     +------------+     +--------------+
+|PostgresHandler| | RedisHandler | | ElasticHandler |
++------------+     +------------+     +--------------+
+| + connect()     | | + connect()     | | + connect()     |
+| + insert(data)  | | + insert(data)  | | + insert(data)  |
+| + validate(data)| | + validate(data)| | + validate(data)|
++-----------------+ +-----------------+ +------------------+

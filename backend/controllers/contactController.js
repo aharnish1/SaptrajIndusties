@@ -1,7 +1,7 @@
-const db = require('../data/mockData');
+const Contact = require('../models/Contact');
 
 // Submit contact form
-const submitContact = (req, res) => {
+const submitContact = async (req, res) => {
   try {
     const { name, email, phone, company, message, subject } = req.body;
 
@@ -12,17 +12,7 @@ const submitContact = (req, res) => {
       });
     }
 
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid email format'
-      });
-    }
-
-    const newContact = {
-      id: Date.now(),
+    const newContact = new Contact({
       name,
       email,
       phone: phone || '',
@@ -30,27 +20,15 @@ const submitContact = (req, res) => {
       subject: subject || 'General Inquiry',
       message,
       status: 'New',
-      date: new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+      date: new Date()
+    });
 
-    // Add to contacts array (or inquiries if it's a business inquiry)
-    if (subject && subject.toLowerCase().includes('quote') || subject.toLowerCase().includes('business')) {
-      db.inquiries.push({
-        ...newContact,
-        requirement: message,
-        type: 'contact'
-      });
-    } else {
-      if (!db.contacts) db.contacts = [];
-      db.contacts.push(newContact);
-    }
+    const savedContact = await newContact.save();
 
     res.status(201).json({
       success: true,
       message: 'Contact form submitted successfully',
-      data: newContact
+      data: savedContact
     });
   } catch (error) {
     res.status(500).json({
@@ -62,32 +40,36 @@ const submitContact = (req, res) => {
 };
 
 // Get all contact submissions
-const getContacts = (req, res) => {
+const getContacts = async (req, res) => {
   try {
-    const { status, search } = req.query;
-    let contacts = db.contacts || [];
-
+    const { status, search, page = 1, limit = 10 } = req.query;
+    
+    // Build query
+    const query = {};
+    
     if (status && status !== 'all') {
-      contacts = contacts.filter(contact => 
-        contact.status.toLowerCase() === status.toLowerCase()
-      );
+      query.status = status;
     }
-
+    
     if (search) {
-      contacts = contacts.filter(contact =>
-        contact.name.toLowerCase().includes(search.toLowerCase()) ||
-        contact.email.toLowerCase().includes(search.toLowerCase()) ||
-        contact.message.toLowerCase().includes(search.toLowerCase())
-      );
+      query.$text = { $search: search };
     }
-
-    // Sort by date (newest first)
-    contacts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
+    
+    // Execute query with pagination
+    const contacts = await Contact.find(query)
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+    
+    const total = await Contact.countDocuments(query);
+    
     res.json({
       success: true,
       data: contacts,
-      count: contacts.length
+      count: contacts.length,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit)
     });
   } catch (error) {
     res.status(500).json({
@@ -99,9 +81,8 @@ const getContacts = (req, res) => {
 };
 
 // Update contact status
-const updateContactStatus = (req, res) => {
+const updateContactStatus = async (req, res) => {
   try {
-    const contactId = parseInt(req.params.id);
     const { status } = req.body;
 
     if (!status) {
@@ -111,23 +92,23 @@ const updateContactStatus = (req, res) => {
       });
     }
 
-    if (!db.contacts) db.contacts = [];
-    const contactIndex = db.contacts.findIndex(c => c.id === contactId);
+    const updatedContact = await Contact.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    );
 
-    if (contactIndex === -1) {
+    if (!updatedContact) {
       return res.status(404).json({
         success: false,
         message: 'Contact not found'
       });
     }
 
-    db.contacts[contactIndex].status = status;
-    db.contacts[contactIndex].updatedAt = new Date().toISOString();
-
     res.json({
       success: true,
       message: 'Contact status updated successfully',
-      data: db.contacts[contactIndex]
+      data: updatedContact
     });
   } catch (error) {
     res.status(500).json({
@@ -139,25 +120,21 @@ const updateContactStatus = (req, res) => {
 };
 
 // Delete contact
-const deleteContact = (req, res) => {
+const deleteContact = async (req, res) => {
   try {
-    const contactId = parseInt(req.params.id);
-    
-    if (!db.contacts) db.contacts = [];
-    const contactIndex = db.contacts.findIndex(c => c.id === contactId);
+    const deletedContact = await Contact.findByIdAndDelete(req.params.id);
 
-    if (contactIndex === -1) {
+    if (!deletedContact) {
       return res.status(404).json({
         success: false,
         message: 'Contact not found'
       });
     }
 
-    db.contacts.splice(contactIndex, 1);
-
     res.json({
       success: true,
-      message: 'Contact deleted successfully'
+      message: 'Contact deleted successfully',
+      data: deletedContact
     });
   } catch (error) {
     res.status(500).json({

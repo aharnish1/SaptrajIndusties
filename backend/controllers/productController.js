@@ -1,28 +1,37 @@
-const db = require('../data/mockData');
+const Product = require('../models/Product');
+const { deleteOldImage } = require('../config/multer');
 
 // Get all products
-const getProducts = (req, res) => {
+const getProducts = async (req, res) => {
   try {
-    const { category, search } = req.query;
-    let filteredProducts = [...db.products];
-
+    const { category, search, page = 1, limit = 10 } = req.query;
+    
+    // Build query
+    const query = {};
+    
     if (category && category !== 'all') {
-      filteredProducts = filteredProducts.filter(product => 
-        product.category.toLowerCase() === category.toLowerCase()
-      );
+      query.category = category;
     }
-
+    
     if (search) {
-      filteredProducts = filteredProducts.filter(product =>
-        product.name.toLowerCase().includes(search.toLowerCase()) ||
-        product.description.toLowerCase().includes(search.toLowerCase())
-      );
+      query.$text = { $search: search };
     }
-
+    
+    // Execute query with pagination
+    const products = await Product.find(query)
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+    
+    const total = await Product.countDocuments(query);
+    
     res.json({
       success: true,
-      data: filteredProducts,
-      count: filteredProducts.length
+      data: products,
+      count: products.length,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit)
     });
   } catch (error) {
     res.status(500).json({
@@ -34,9 +43,9 @@ const getProducts = (req, res) => {
 };
 
 // Get product by ID
-const getProductById = (req, res) => {
+const getProductById = async (req, res) => {
   try {
-    const product = db.products.find(p => p.id === parseInt(req.params.id));
+    const product = await Product.findById(req.params.id);
     
     if (!product) {
       return res.status(404).json({
@@ -59,9 +68,15 @@ const getProductById = (req, res) => {
 };
 
 // Create new product
-const createProduct = (req, res) => {
+const createProduct = async (req, res) => {
   try {
-    const { name, category, description, specifications, images } = req.body;
+    const { name, category, description, specifications, images, status } = req.body;
+    
+    // Handle image upload
+    let imagePath = '';
+    if (req.file) {
+      imagePath = `uploads/products/${req.file.filename}`;
+    }
 
     if (!name || !category) {
       return res.status(400).json({
@@ -70,24 +85,22 @@ const createProduct = (req, res) => {
       });
     }
 
-    const newProduct = {
-      id: Date.now(),
+    const newProduct = new Product({
       name,
       category,
       description: description || '',
-      specifications: specifications || [],
+      specifications: specifications || {},
       images: images || [],
-      status: 'Active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+      image: imagePath,
+      status: status || 'Active'
+    });
 
-    db.products.push(newProduct);
+    const savedProduct = await newProduct.save();
 
     res.status(201).json({
       success: true,
       message: 'Product created successfully',
-      data: newProduct
+      data: savedProduct
     });
   } catch (error) {
     res.status(500).json({
@@ -99,25 +112,42 @@ const createProduct = (req, res) => {
 };
 
 // Update product
-const updateProduct = (req, res) => {
+const updateProduct = async (req, res) => {
   try {
-    const productId = parseInt(req.params.id);
-    const productIndex = db.products.findIndex(p => p.id === productId);
-
-    if (productIndex === -1) {
+    const { name, category, description, specifications, images, status } = req.body;
+    
+    // Find the current product to get old image path
+    const currentProduct = await Product.findById(req.params.id);
+    if (!currentProduct) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
       });
     }
 
-    const updatedProduct = {
-      ...db.products[productIndex],
-      ...req.body,
-      updatedAt: new Date().toISOString()
-    };
+    // Handle image upload
+    let imagePath = currentProduct.image; // Keep existing image by default
+    if (req.file) {
+      // Delete old image if it exists
+      if (currentProduct.image) {
+        await deleteOldImage(currentProduct.image);
+      }
+      imagePath = `uploads/products/${req.file.filename}`;
+    }
 
-    db.products[productIndex] = updatedProduct;
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        category,
+        description,
+        specifications,
+        images,
+        image: imagePath,
+        status
+      },
+      { new: true, runValidators: true }
+    );
 
     res.json({
       success: true,
@@ -134,23 +164,26 @@ const updateProduct = (req, res) => {
 };
 
 // Delete product
-const deleteProduct = (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
-    const productId = parseInt(req.params.id);
-    const productIndex = db.products.findIndex(p => p.id === productId);
+    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
 
-    if (productIndex === -1) {
+    if (!deletedProduct) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
       });
     }
 
-    db.products.splice(productIndex, 1);
+    // Delete associated image if it exists
+    if (deletedProduct.image) {
+      await deleteOldImage(deletedProduct.image);
+    }
 
     res.json({
       success: true,
-      message: 'Product deleted successfully'
+      message: 'Product deleted successfully',
+      data: deletedProduct
     });
   } catch (error) {
     res.status(500).json({
@@ -162,9 +195,9 @@ const deleteProduct = (req, res) => {
 };
 
 // Get product categories
-const getProductCategories = (req, res) => {
+const getProductCategories = async (req, res) => {
   try {
-    const categories = [...new Set(db.products.map(product => product.category))];
+    const categories = await Product.distinct('category');
     
     res.json({
       success: true,

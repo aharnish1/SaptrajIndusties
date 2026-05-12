@@ -1,7 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TeamCard from './TeamCard';
 
-const TeamSection = ({ teamMembers }) => {
+const TeamSection = () => {
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchTeamMembers();
+  }, []);
+
+  const fetchTeamMembers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      // Fetch only active team members for public display
+      const response = await fetch('http://localhost:5000/api/team-members?activeOnly=true');
+      const data = await response.json();
+      setTeamMembers(data.data || []);
+    } catch (err) {
+      console.error('Error fetching team members:', err);
+      setError('Failed to load team members');
+      setTeamMembers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-1 bg-deep-black">
+        <div className="container mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-industrial-yellow mx-auto"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-1 bg-deep-black">
+        <div className="container mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <div className="text-gray-400">
+              <p className="text-lg mb-4">Failed to load team members</p>
+              <p className="text-sm">Please try refreshing the page</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-1 bg-deep-black">
       <div className="container mx-auto px-6 md:px-12">

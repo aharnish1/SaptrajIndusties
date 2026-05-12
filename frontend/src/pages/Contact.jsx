@@ -1,9 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Loader2 } from 'lucide-react';
+import { inquiriesAPI } from '../services/api';
+import { toast } from 'react-hot-toast';
 
 const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    company: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const submissionData = {
+        name: formData.name,
+        company: formData.company,
+        email: formData.email,
+        phone: formData.phone,
+        requirement: 'General Contact',
+        message: formData.message
+      };
+
+      console.log('Submitting contact form:', submissionData);
+      
+      const response = await inquiriesAPI.create(submissionData);
+      
+      console.log('Contact submission response:', response);
+
+      // Show success toast
+      toast.success('Message sent successfully! We will get back to you soon.', {
+        duration: 5000,
+        style: {
+          background: '#0A0A0A',
+          color: '#fff',
+          border: '1px solid #FFD000',
+        },
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        company: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+
+    } catch (error) {
+      console.error('Contact form submission error:', error);
+      
+      toast.error('Failed to send message. Please try again.', {
+        duration: 5000,
+        style: {
+          background: '#0A0A0A',
+          color: '#fff',
+          border: '1px solid #ef4444',
+        },
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="bg-gunmetal-gray py-20 border-b border-[#333]">
@@ -53,17 +127,66 @@ const Contact = () => {
             <div className="bg-[#0A0A0A] border border-gunmetal-gray p-8 rounded-lg relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-industrial-yellow"></div>
               <h2 className="text-2xl font-heading font-bold text-white mb-6">Send us a Message</h2>
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Full Name" id="name" placeholder="John Doe" />
-                  <Input label="Company Name" id="company" placeholder="ABC Manufacturing" />
+                  <Input 
+                    label="Full Name" 
+                    id="name" 
+                    placeholder="John Doe" 
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required 
+                  />
+                  <Input 
+                    label="Company Name" 
+                    id="company" 
+                    placeholder="ABC Manufacturing" 
+                    value={formData.company}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Email Address" id="email" type="email" placeholder="john@example.com" />
-                  <Input label="Phone Number" id="phone" placeholder="+91 98765 43210" />
+                  <Input 
+                    label="Email Address" 
+                    id="email" 
+                    type="email" 
+                    placeholder="john@example.com" 
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required 
+                  />
+                  <Input 
+                    label="Phone Number" 
+                    id="phone" 
+                    placeholder="+91 98765 43210" 
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                  />
                 </div>
-                <Input label="Message" id="message" type="textarea" placeholder="How can we help you?" />
-                <Button variant="primary" className="w-full mt-4">Send Message</Button>
+                <Input 
+                  label="Message" 
+                  id="message" 
+                  type="textarea" 
+                  placeholder="How can we help you?" 
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required 
+                />
+                <Button 
+                  type="submit"
+                  variant="primary" 
+                  className="w-full mt-4"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 size={16} className="animate-spin" />
+                      Sending...
+                    </span>
+                  ) : (
+                    'Send Message'
+                  )}
+                </Button>
               </form>
             </div>
           </div>

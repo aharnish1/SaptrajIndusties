@@ -27,9 +27,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      process.env.FRONTEND_URL,
-      process.env.ADMIN_URL,
-      process.env.CLIENT_URL
+      'https://saptraj-industries.vercel.app',
+      'https://saptraj-industries-v21u.vercel.app',
+      'http://localhost:3000'
     ].filter(Boolean),
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true

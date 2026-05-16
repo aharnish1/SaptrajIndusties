@@ -48,7 +48,7 @@ const inquirySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['New', 'In Progress', 'Completed', 'Cancelled'],
+    enum: ['New', 'In Progress', 'Completed', 'Cancelled', 'Replied'],
     default: 'New'
   },
   date: {
@@ -80,7 +80,23 @@ const inquirySchema = new mongoose.Schema({
   notificationSent: {
     type: Boolean,
     default: false
-  }
+  },
+  // Reply history
+  replies: [{
+    message: {
+      type: String,
+      required: true
+    },
+    repliedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false
+    },
+    repliedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

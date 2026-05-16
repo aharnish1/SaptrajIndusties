@@ -9,6 +9,7 @@ const apiRoutes = require('./routes/api');
 const settingsRoutes = require('./routes/settingsRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const sendEmail = require('./utils/sendEmail');
 
 // Load environment variables
 dotenv.config();
@@ -26,9 +27,10 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:5173",
-      "http://localhost:5174"
-    ],
+      process.env.FRONTEND_URL,
+      process.env.ADMIN_URL,
+      process.env.CLIENT_URL
+    ].filter(Boolean),
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true
   }
@@ -36,6 +38,9 @@ const io = new Server(server, {
 
 // Store io instance in app for use in controllers
 app.set('io', io);
+
+const notificationService = require('./services/notificationService');
+notificationService.setIO(io);
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
@@ -56,11 +61,9 @@ io.on('connection', (socket) => {
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      'http://localhost:3000',  // Frontend
-      'http://localhost:5173',  // Frontend (Vite default)
-      'http://localhost:5174',  // Admin (Vite)
       process.env.FRONTEND_URL,
-      process.env.ADMIN_URL
+      process.env.ADMIN_URL,
+      process.env.CLIENT_URL
     ].filter(Boolean);
     
     if (!origin || allowedOrigins.includes(origin)) {
@@ -106,6 +109,35 @@ app.get('/', (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Saptraj Industries API is running' });
+});
+
+// SMTP Test Route
+app.get('/test-email', async (req, res) => {
+  try {
+    console.log('🧪 TEST EMAIL ROUTE HIT');
+
+    const result = await sendEmail(
+      'aharnishparekar7@gmail.com',
+      'SMTP Test Email',
+      '<h1>SMTP Test Successful</h1><p>Email system working correctly.</p>'
+    );
+
+    console.log('🧪 TEST EMAIL RESULT:', result);
+
+    return res.json({
+      success: true,
+      result
+    });
+
+  } catch (error) {
+    console.error('🧪 TEST EMAIL ERROR:', error);
+
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      fullError: error
+    });
+  }
 });
 
 // Global error handler

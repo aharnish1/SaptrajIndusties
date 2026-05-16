@@ -24,7 +24,9 @@ import {
   Gauge,
   Cog,
   Hammer,
-  Sparkles
+  Sparkles,
+  Paintbrush,
+BrushCleaning
 } from 'lucide-react';
 import Button from './UI/Button';
 import ServiceHero3D from './services/ServiceHero3D';
@@ -738,7 +740,334 @@ const serviceData = {
       { value: '500+', label: 'Panels Delivered' },
       { value: '50+', label: 'Custom Designs' }
     ]
-  }
+  },
+  'industrial-painting-services': {
+  id: 'industrial-painting-services',
+  title: 'Industrial Painting Services',
+  subtitle: 'Professional Surface Coating Technology',
+  tagline: 'Advanced Painting & Coating Solutions',
+  description: 'Professional industrial painting and protective coating services for fabricated structures, machinery, and industrial equipment.',
+  heroImage: '/images/services/industrial-painting-hero.jpg',
+  model: '/models/painting-machine.glb',
+
+  features: [
+    'Powder coating solutions',
+    'Anti-corrosion protection',
+    'Industrial spray painting',
+    'Surface preparation',
+    'Heat resistant coatings',
+    'Premium finish quality'
+  ],
+
+  overview: {
+    technology: 'Advanced industrial spray painting and powder coating systems with precision finishing.',
+    precision: 'Uniform coating thickness with superior adhesion and long-lasting durability.',
+    materials: 'Expertise in coating mild steel, stainless steel, aluminum, and fabricated structures.',
+    capacity: 'Large-scale industrial painting for machinery, panels, structures, and fabricated products.',
+    automation: 'Modern spray systems and controlled curing processes for premium quality finishes.',
+    quality: 'Strict surface preparation and coating quality inspection for long-term performance.'
+  },
+
+  capabilities: [
+    {
+      icon: Paintbrush,
+      title: 'Premium Finishing',
+      description: 'High-quality industrial finishing with smooth and durable coatings.',
+      features: [
+        'Smooth finish',
+        'Uniform coating',
+        'Premium aesthetics',
+        'Long durability'
+      ]
+    },
+    {
+      icon: Shield,
+      title: 'Anti-Corrosion Protection',
+      description: 'Protective coatings to prevent rust and environmental damage.',
+      features: [
+        'Rust prevention',
+        'Weather resistance',
+        'Chemical resistance',
+        'Industrial protection'
+      ]
+    },
+    {
+      icon: Factory,
+      title: 'Large Scale Painting',
+      description: 'Industrial painting solutions for heavy machinery and structures.',
+      features: [
+        'Heavy structures',
+        'Machine coating',
+        'Fabricated parts',
+        'Bulk processing'
+      ]
+    },
+    {
+      icon: Zap,
+      title: 'Modern Coating Technology',
+      description: 'Advanced spray systems and powder coating technology.',
+      features: [
+        'Powder coating',
+        'Spray painting',
+        'Fast curing',
+        'Efficient process'
+      ]
+    }
+  ],
+
+  materials: [
+    {
+      name: 'Mild Steel',
+      thickness: 'All Sizes',
+      applications: 'Industrial structures, fabricated products'
+    },
+    {
+      name: 'Stainless Steel',
+      thickness: 'All Sizes',
+      applications: 'Decorative and corrosion-resistant applications'
+    },
+    {
+      name: 'Aluminum',
+      thickness: 'All Sizes',
+      applications: 'Lightweight industrial components'
+    },
+    {
+      name: 'Heavy Fabricated Parts',
+      thickness: 'Custom',
+      applications: 'Industrial machinery and structures'
+    }
+  ],
+
+  industries: [
+    {
+      name: 'Manufacturing',
+      applications: 'Industrial machines, fabricated structures'
+    },
+    {
+      name: 'Construction',
+      applications: 'Structural steel and architectural components'
+    },
+    {
+      name: 'Automotive',
+      applications: 'Industrial vehicle and component coatings'
+    },
+    {
+      name: 'Infrastructure',
+      applications: 'Outdoor industrial structures and equipment'
+    }
+  ],
+
+  process: [
+    {
+      step: 1,
+      title: 'Surface Preparation',
+      description: 'Cleaning, grinding, and preparation for coating adhesion.'
+    },
+    {
+      step: 2,
+      title: 'Primer Application',
+      description: 'Application of industrial-grade primer coating.'
+    },
+    {
+      step: 3,
+      title: 'Painting & Coating',
+      description: 'Precision spray painting or powder coating process.'
+    },
+    {
+      step: 4,
+      title: 'Curing Process',
+      description: 'Controlled curing for maximum durability and finish.'
+    },
+    {
+      step: 5,
+      title: 'Quality Inspection',
+      description: 'Final inspection for coating quality and consistency.'
+    }
+  ],
+
+  stats: [
+    {
+      value: '100%',
+      label: 'Coating Coverage'
+    },
+    {
+      value: '500+',
+      label: 'Projects Completed'
+    },
+    {
+      value: 'Anti-Rust',
+      label: 'Protection'
+    },
+    {
+      value: 'Premium',
+      label: 'Finish Quality'
+    }
+  ]
+},
+
+'metal-surface-treatment': {
+  id: 'metal-surface-treatment',
+  title: 'Metal Surface Treatment',
+  subtitle: 'Advanced Surface Enhancement Technology',
+  tagline: 'Surface Protection & Treatment',
+  description: 'Professional surface treatment services including sand blasting, rust removal, polishing, and chemical treatment for industrial components.',
+  heroImage: '/images/services/surface-treatment-hero.jpg',
+  model: '/models/surface-treatment-machine.glb',
+
+  features: [
+    'Sand blasting',
+    'Rust removal',
+    'Chemical treatment',
+    'Surface polishing',
+    'Protective finishing',
+    'Industrial durability'
+  ],
+
+  overview: {
+    technology: 'Advanced surface preparation and treatment technologies for industrial-grade durability.',
+    precision: 'Uniform surface finishing and treatment processes for enhanced coating adhesion.',
+    materials: 'Surface treatment expertise for steel, stainless steel, aluminum, and fabricated components.',
+    capacity: 'Large-scale processing for industrial components and fabricated structures.',
+    automation: 'Modern blasting and polishing equipment for efficient production.',
+    quality: 'Strict inspection and quality standards for surface cleanliness and finish.'
+  },
+
+  capabilities: [
+    {
+      icon: BrushCleaning,
+      title: 'Surface Preparation',
+      description: 'Professional preparation for coating and fabrication.',
+      features: [
+        'Cleaning',
+        'Deburring',
+        'Grinding',
+        'Preparation'
+      ]
+    },
+    {
+      icon: Shield,
+      title: 'Rust Protection',
+      description: 'Protective treatment to improve durability and lifespan.',
+      features: [
+        'Rust removal',
+        'Corrosion control',
+        'Protection',
+        'Long durability'
+      ]
+    },
+    {
+      icon: Sparkles,
+      title: 'Polishing & Finishing',
+      description: 'Premium polishing and aesthetic surface finishing.',
+      features: [
+        'Smooth finish',
+        'Industrial polishing',
+        'Surface shine',
+        'Visual quality'
+      ]
+    },
+    {
+      icon: Factory,
+      title: 'Industrial Processing',
+      description: 'High-capacity treatment solutions for industrial fabrication.',
+      features: [
+        'Bulk processing',
+        'Heavy structures',
+        'Machine components',
+        'Industrial scale'
+      ]
+    }
+  ],
+
+  materials: [
+    {
+      name: 'Carbon Steel',
+      thickness: 'All Sizes',
+      applications: 'Industrial structures and fabricated parts'
+    },
+    {
+      name: 'Stainless Steel',
+      thickness: 'All Sizes',
+      applications: 'Food-grade and decorative finishing'
+    },
+    {
+      name: 'Aluminum',
+      thickness: 'All Sizes',
+      applications: 'Lightweight industrial components'
+    },
+    {
+      name: 'Heavy Machinery Parts',
+      thickness: 'Custom',
+      applications: 'Industrial machine restoration and finishing'
+    }
+  ],
+
+  industries: [
+    {
+      name: 'Manufacturing',
+      applications: 'Machine parts and fabricated structures'
+    },
+    {
+      name: 'Construction',
+      applications: 'Structural steel preparation and finishing'
+    },
+    {
+      name: 'Automotive',
+      applications: 'Vehicle and component treatment'
+    },
+    {
+      name: 'Industrial Equipment',
+      applications: 'Heavy equipment restoration and protection'
+    }
+  ],
+
+  process: [
+    {
+      step: 1,
+      title: 'Inspection',
+      description: 'Surface inspection and treatment planning.'
+    },
+    {
+      step: 2,
+      title: 'Cleaning & Preparation',
+      description: 'Removal of contaminants and preparation process.'
+    },
+    {
+      step: 3,
+      title: 'Surface Treatment',
+      description: 'Sand blasting, polishing, or chemical treatment.'
+    },
+    {
+      step: 4,
+      title: 'Protection Process',
+      description: 'Protective finishing and treatment application.'
+    },
+    {
+      step: 5,
+      title: 'Final Quality Check',
+      description: 'Inspection for finish quality and durability.'
+    }
+  ],
+
+  stats: [
+    {
+      value: '100%',
+      label: 'Surface Coverage'
+    },
+    {
+      value: 'Anti-Rust',
+      label: 'Protection'
+    },
+    {
+      value: 'Industrial',
+      label: 'Grade Finish'
+    },
+    {
+      value: '400+',
+      label: 'Projects Completed'
+    }
+  ]
+}
 };
 
 const ServiceDetail = () => {

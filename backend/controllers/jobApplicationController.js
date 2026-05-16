@@ -1,5 +1,6 @@
 const JobApplication = require('../models/JobApplication');
 const Job = require('../models/Job');
+const { createNotification } = require('./notificationController');
 
 // Create new job application
 const createApplication = async (req, res) => {
@@ -56,6 +57,31 @@ const createApplication = async (req, res) => {
       fullName: savedApplication.fullName,
       email: savedApplication.email
     });
+    
+    // Create notification in database
+    try {
+      await createNotification({
+        type: 'job_application',
+        category: 'new',
+        title: `New Job Application for ${job.title}`,
+        message: `${req.body.fullName} has applied for the position of ${job.title}`,
+        relatedId: savedApplication._id,
+        relatedModel: 'JobApplication',
+        priority: 'high',
+        actionUrl: `/career-applications?open=${savedApplication._id}`,
+        data: {
+          applicationId: savedApplication._id,
+          jobId: job._id,
+          jobTitle: job.title,
+          applicantName: req.body.fullName,
+          applicantEmail: req.body.email
+        }
+      });
+      console.log('✅ Job application notification created successfully');
+    } catch (notificationError) {
+      console.error('❌ Error creating job application notification:', notificationError);
+      // Don't fail the request if notification creation fails
+    }
     
     // Verify the uploaded file exists and has content
     if (req.file) {

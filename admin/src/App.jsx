@@ -5,6 +5,7 @@ import {
   Route,
   Navigate
 } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 import { AuthProvider } from './contexts/AuthContext';
 import { SocketProvider } from './context/SocketContext';
@@ -26,6 +27,23 @@ function App() {
   return (
     <AuthProvider>
       <SocketProvider>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 5000,
+            style: {
+              background: '#1a1a1a',
+              color: '#E0E0E0',
+              border: '1px solid #333'
+            },
+            success: {
+              iconTheme: {
+                primary: '#FFD400',
+                secondary: '#050505'
+              }
+            }
+          }}
+        />
         <Router>
           <Routes>
 

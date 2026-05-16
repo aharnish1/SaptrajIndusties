@@ -21,7 +21,7 @@ const Settings = () => {
     // Load settings from API
     const fetchSettings = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/settings');
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL || ''}/settings`);
         setFormData(response.data.data);
       } catch (error) {
         console.error('Error loading settings:', error);

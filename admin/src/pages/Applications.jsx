@@ -17,7 +17,7 @@ const Applications = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/jobs/applications');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/jobs/applications`);
       const data = await response.json();
       setApplications(data.data || []);
       setError(null);
@@ -31,7 +31,7 @@ const Applications = () => {
 
   const updateApplicationStatus = async (applicationId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/jobs/applications/${applicationId}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/jobs/applications/${applicationId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const Applications = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/jobs/applications/${applicationId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/jobs/applications/${applicationId}`, {
         method: 'DELETE',
       });
 

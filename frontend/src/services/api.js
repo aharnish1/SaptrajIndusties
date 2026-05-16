@@ -5,9 +5,7 @@ import axios from 'axios';
 // ============================================
 
 const API = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_URL ||
-    'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
 
   timeout: 10000,
 
@@ -15,6 +13,12 @@ const API = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// ============================================
+// BACKEND URL HELPER
+// ============================================
+
+export const getBackendUrl = () => import.meta.env.VITE_BACKEND_URL || '';
 
 // ============================================
 // REQUEST INTERCEPTOR
@@ -432,32 +436,18 @@ export const jobsAPI = {
 // HEALTH CHECK
 // ============================================
 
-export const healthCheck =
-  async () => {
-
-    try {
-
-      const response =
-        await API.get(
-          '/health',
-          {
-            baseURL:
-              import.meta.env
-                .VITE_API_URL ||
-              'http://localhost:5000'
-          }
-        );
-
-      return response.data;
-
-    } catch (error) {
-
-      throw new Error(
-        error.response?.data?.message ||
-        'Backend is not responding'
-      );
-    }
-  };
+export const healthCheck = async () => {
+  try {
+    const response = await API.get('/health', {
+      baseURL: import.meta.env.VITE_BACKEND_URL || ''
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || 'Backend is not responding'
+    );
+  }
+};
 
 // ============================================
 // LEGACY EXPORTS

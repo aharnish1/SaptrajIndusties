@@ -18,19 +18,19 @@ const Home = () => {
       <ServicesSection />
       
       {/* Infrastructure Snippet */}
-      <section className="py-24 bg-deep-black border-y border-[#222]">
+      <section className="py-24 bg-bg-deep border-y border-border-subtle industrial-grid">
         <div className="container mx-auto px-6 md:px-12">
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="w-full md:w-1/2">
-              <span className="text-industrial-yellow uppercase tracking-widest font-bold text-sm">Infrastructure</span>
-              <h2 className="text-4xl font-heading font-bold text-white mt-4 mb-6">Advanced Machinery</h2>
-              <p className="text-gray-400 mb-6 leading-relaxed">
+              <span className="text-accent-primary uppercase tracking-widest font-bold text-sm font-body">Infrastructure</span>
+              <h2 className="text-4xl font-display font-bold text-text-primary mt-4 mb-6 steel-heading" data-text="Advanced Machinery">Advanced Machinery</h2>
+              <p className="text-text-muted mb-6 leading-relaxed font-body">
                 Equipped with state-of-the-art Bodor Fiber Laser machines and precision CNC bending equipment, our facility is geared for high-volume, high-accuracy production.
               </p>
               <ul className="space-y-4 mb-8">
                 {['Bodor Fiber Laser Machine', 'CNC Bending Machines', 'Advanced Welding Stations', 'Dedicated Fabrication Shop'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-300">
-                    <span className="w-2 h-2 rounded-full bg-industrial-yellow"></span>
+                  <li key={i} className="flex items-center gap-3 text-text-secondary font-body">
+                    <span className="w-2 h-2 rounded-full bg-accent-primary"></span>
                     {item}
                   </li>
                 ))}
@@ -41,8 +41,8 @@ const Home = () => {
             </div>
             <div className="w-full md:w-1/2">
               {/* Image Placeholder */}
-              <div className="aspect-video bg-gunmetal-gray border border-[#333] rounded-lg flex items-center justify-center relative overflow-hidden group">
-                <div className="absolute inset-0 bg-industrial-yellow opacity-10 group-hover:opacity-20 transition-opacity"></div>
+              <div className="aspect-video bg-metal-dark border border-border-subtle rounded-lg flex items-center justify-center relative overflow-hidden group box-glow-hover">
+                <div className="absolute inset-0 bg-accent-primary opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 
                 <img src={infrastructure5} alt="Infrastructure" className="w-full h-full object-cover" />
               </div>
@@ -54,18 +54,18 @@ const Home = () => {
       <ProcessTimeline />
 
       {/* Quality Assurance Snippet */}
-      <section className="py-24 bg-deep-black">
+      <section className="py-24 bg-bg-deep">
         <div className="container mx-auto px-6 md:px-12 text-center">
-          <ShieldCheck size={48} className="text-industrial-yellow mx-auto mb-6" />
-          <h2 className="text-4xl font-heading font-bold text-white mb-6">Uncompromising Quality</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-12">
+          <ShieldCheck size={48} className="text-accent-primary mx-auto mb-6" />
+          <h2 className="text-4xl font-display font-bold text-text-primary mb-6 steel-heading" data-text="Uncompromising Quality">Uncompromising Quality</h2>
+          <p className="text-text-muted max-w-2xl mx-auto mb-12 font-body">
             "Accuracy the smart choice." Our ISO 9001:2015 certified quality processes ensure that every component leaving our facility meets exacting international standards.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {['Vernier Caliper', 'Height Gauge', 'Micrometer', 'Weld Gauge'].map((tool, i) => (
-              <div key={i} className="px-6 py-3 bg-gunmetal-gray border border-[#333] rounded flex items-center gap-2">
-                <Ruler size={16} className="text-industrial-yellow" />
-                <span className="text-sm text-white font-semibold">{tool}</span>
+              <div key={i} className="px-6 py-3 bg-metal-dark border border-border-subtle rounded flex items-center gap-2 box-glow-hover">
+                <Ruler size={16} className="text-accent-primary" />
+                <span className="text-sm text-text-primary font-semibold font-body">{tool}</span>
               </div>
             ))}
           </div>
@@ -73,12 +73,13 @@ const Home = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 relative border-t border-[#333] overflow-hidden">
-        <div className="absolute inset-0 bg-gunmetal-gray z-0">
-           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,212,0,0.05)_0%,transparent_60%)]"></div>
+      <section className="py-24 relative border-t border-border-subtle overflow-hidden">
+        <div className="absolute inset-0 bg-metal-dark z-0">
+           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,122,0,0.08)_0%,transparent_60%)]"></div>
+           <div className="absolute inset-0 industrial-grid opacity-20"></div>
         </div>
         <div className="container mx-auto px-6 md:px-12 relative z-10 text-center">
-          <h2 className="text-4xl md:text-6xl font-heading font-bold text-white mb-8">Need Precision Fabrication?</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-bold text-text-primary mb-8 steel-heading" data-text="Need Precision Fabrication?">Need Precision Fabrication?</h2>
           <Link to="/quote">
             <Button variant="primary" className="text-lg px-8 py-4">
               Request a Quote Today

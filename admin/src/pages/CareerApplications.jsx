@@ -81,7 +81,7 @@ const CareerApplications = () => {
     }
     
     if (resumePath.startsWith('/uploads/')) {
-      return `http://localhost:5000${resumePath}`;
+      return `${import.meta.env.VITE_BACKEND_URL || ''}${resumePath}`;
     }
     
     return null;
@@ -180,17 +180,15 @@ const CareerApplications = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-heading font-bold text-white">Career Applications</h1>
-          <p className="text-gray-400 mt-2">Manage job applications and candidate information</p>
+    <div className="admin-page space-y-6">
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="admin-page-title">Career Applications</h1>
+          <p className="admin-page-subtitle">Manage job applications and candidate information</p>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="admin-stats-grid">
         <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray p-6">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-blue-500/10 rounded-lg">
@@ -246,9 +244,8 @@ const CareerApplications = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray p-4 sm:p-6 w-full max-w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           <div className="relative">
             <Search className="absolute left-3 top-3 text-gray-400" size={20} />
             <input
@@ -286,10 +283,9 @@ const CareerApplications = () => {
         </div>
       </div>
 
-      {/* Applications Table */}
-      <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+      <div className="admin-table-card">
+        <div className="admin-table-scroll">
+          <table className="admin-table min-w-[1000px]">
             <thead className="bg-[#111] border-b border-[#333]">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -319,9 +315,9 @@ const CareerApplications = () => {
               {applications.length > 0 ? (
                 applications.map((application) => (
                   <tr key={application._id} className="hover:bg-[#111] transition-colors">
-                    <td className="px-6 py-4">
-                      <div>
-                        <div className="text-sm font-medium text-white">
+                    <td className="px-4 sm:px-6 py-4 max-w-[160px]">
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-white truncate">
                           {application.fullName}
                         </div>
                         {application.currentCompany && (
@@ -341,11 +337,11 @@ const CareerApplications = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1 text-sm text-gray-300">
-                          <Mail size={14} />
-                          {application.email}
+                    <td className="px-4 sm:px-6 py-4 max-w-[200px]">
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex items-center gap-1 text-sm text-gray-300 min-w-0">
+                          <Mail size={14} className="flex-shrink-0" />
+                          <span className="truncate">{application.email}</span>
                         </div>
                         <div className="flex items-center gap-1 text-sm text-gray-300">
                           <Phone size={14} />
@@ -364,8 +360,8 @@ const CareerApplications = () => {
                     <td className="px-6 py-4 text-sm text-gray-400">
                       {formatDate(application.createdAt)}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
+                    <td className="px-4 sm:px-6 py-4">
+                      <div className="flex flex-wrap items-center gap-2 min-w-[180px]">
                         <button
                           onClick={() => handleViewApplication(application)}
                           className="text-industrial-yellow hover:text-white transition-colors"
@@ -378,7 +374,7 @@ const CareerApplications = () => {
                         <select
                           value={application.status}
                           onChange={(e) => handleStatusUpdate(application._id, e.target.value)}
-                          className="text-sm bg-[#2a2a2a] border border-[#444] rounded text-white px-2 py-1"
+                          className="text-sm bg-[#2a2a2a] border border-[#444] rounded text-white px-2 py-1 max-w-[120px] sm:max-w-none"
                         >
                           <option value="Pending">Pending</option>
                           <option value="Under Review">Under Review</option>

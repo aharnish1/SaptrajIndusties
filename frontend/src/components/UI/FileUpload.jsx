@@ -174,7 +174,7 @@ const FileUpload = ({
       setPreviewModal({
         isOpen: true,
         imageUrl:
-          'http://localhost:5000' +
+          `${import.meta.env.VITE_BACKEND_URL || ''}` +
           fileObj.url,
         fileName: fileObj.name,
       });
@@ -184,7 +184,7 @@ const FileUpload = ({
     ) {
 
       window.open(
-        `http://localhost:5000${fileObj.url}`,
+        `${import.meta.env.VITE_BACKEND_URL || ''}${fileObj.url}`,
         '_blank'
       );
 
@@ -211,7 +211,7 @@ const FileUpload = ({
       document.createElement('a');
 
     link.href =
-      `http://localhost:5000${fileObj.url}`;
+      `${import.meta.env.VITE_BACKEND_URL || ''}${fileObj.url}`;
 
     link.download = fileObj.name;
 

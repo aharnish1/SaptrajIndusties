@@ -238,24 +238,23 @@ const Careers = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-heading font-bold text-white">Careers Management</h1>
-          <p className="text-gray-400 mt-2">Manage job postings and applications</p>
+    <div className="admin-page space-y-6">
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="admin-page-title">Careers Management</h1>
+          <p className="admin-page-subtitle">Manage job postings and applications</p>
         </div>
         <button
+          type="button"
           onClick={handleAddJob}
-          className="flex items-center gap-2 px-4 py-2 bg-industrial-yellow text-deep-black font-bold rounded hover:bg-white transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-industrial-yellow text-deep-black font-bold rounded hover:bg-white transition-colors flex-shrink-0"
         >
           <Plus size={20} />
           Add Job
         </button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="admin-stats-grid-3">
         <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray p-6">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-industrial-yellow/10 rounded-lg">
@@ -295,10 +294,9 @@ const Careers = () => {
         </div>
       </div>
 
-      {/* Jobs Table */}
-      <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+      <div className="admin-table-card">
+        <div className="admin-table-scroll">
+          <table className="admin-table min-w-[960px]">
             <thead className="bg-[#111] border-b border-[#333]">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -357,8 +355,8 @@ const Careers = () => {
                     <td className="px-6 py-4 text-sm text-gray-400">
                       {job.postedDate ? new Date(job.postedDate).toLocaleDateString() : 'N/A'}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
+                    <td className="px-4 sm:px-6 py-4">
+                      <div className="flex flex-wrap items-center gap-2">
                         <button
                           onClick={() => handleEditJob(job)}
                           className="text-industrial-yellow hover:text-white transition-colors"

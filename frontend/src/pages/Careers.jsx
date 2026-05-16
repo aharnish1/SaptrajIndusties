@@ -93,7 +93,7 @@ const Careers = () => {
       console.log('🔍 Frontend Application Debug - Resume file:', applicationForm.resume);
 
       // Submit to backend API
-      const response = await fetch('http://localhost:5000/api/jobs/apply', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/jobs/apply`, {
         method: 'POST',
         body: formData
       });

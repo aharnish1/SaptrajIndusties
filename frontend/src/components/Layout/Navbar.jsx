@@ -44,13 +44,13 @@ const Navbar = () => {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          isScrolled ? 'bg-deep-black/90 backdrop-blur-md border-b border-gunmetal-gray py-4' : 'bg-transparent py-6'
+          isScrolled ? 'glass-industrial border-b border-border-accent py-4' : 'bg-transparent py-6'
         }`}
       >
         <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="relative z-50 flex items-center gap-3 group">
-            <div className="relative group-hover:box-glow transition-all">
+            <div className="relative group-hover:box-glow-hover transition-all">
               <img 
                 src={logo} 
                 alt="SAPTRAJ INDUSTRIES LLP" 
@@ -58,10 +58,10 @@ const Navbar = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-bold text-xl tracking-wider text-white group-hover:text-industrial-yellow transition-colors">
+              <span className="font-display font-bold text-xl tracking-wider text-text-primary group-hover:text-accent-primary transition-colors">
                 SAPTRAJ
               </span>
-              <span className="text-[10px] tracking-[0.2em] text-gray-400 uppercase">Industries LLP</span>
+              <span className="text-[10px] tracking-[0.2em] text-text-dim uppercase">Industries LLP</span>
             </div>
           </Link>
 
@@ -72,24 +72,24 @@ const Navbar = () => {
                 return (
                   <div key={link.name} className="relative group">
                     <button
-                      className={`text-sm font-semibold tracking-wider uppercase transition-colors flex items-center gap-1 ${
+                      className={`text-sm font-semibold tracking-wider uppercase transition-colors flex items-center gap-1 font-body ${
                         link.dropdown.some(item => location.pathname === item.path) 
-                          ? 'text-industrial-yellow' 
-                          : 'text-gray-300 hover:text-white'
+                          ? 'text-accent-primary text-glow-subtle' 
+                          : 'text-text-muted hover:text-text-primary'
                       }`}
                     >
                       {link.name}
-                      <ChevronDown size={16} className="transition-transform group-hover:rotate-180" />
+                      <ChevronDown size={16} className="transition-transform group-hover:rotate-180 text-accent-primary" />
                     </button>
                     
                     {/* Dropdown Menu */}
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-deep-black border border-[#333] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                    <div className="absolute top-full left-0 mt-2 w-48 glass-industrial border border-border-subtle rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
                       {link.dropdown.map((dropdownItem) => (
                         <Link
                           key={dropdownItem.name}
                           to={dropdownItem.path}
-                          className={`block px-4 py-3 text-sm transition-colors hover:bg-industrial-yellow/10 hover:text-industrial-yellow ${
-                            location.pathname === dropdownItem.path ? 'text-industrial-yellow bg-industrial-yellow/10' : 'text-gray-300'
+                          className={`block px-4 py-3 text-sm transition-colors hover:bg-accent-primary/10 hover:text-accent-primary font-body ${
+                            location.pathname === dropdownItem.path ? 'text-accent-primary bg-accent-primary/10' : 'text-text-muted'
                           }`}
                         >
                           {dropdownItem.name}
@@ -104,13 +104,13 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`text-sm font-semibold tracking-wider uppercase transition-colors relative group ${
-                    location.pathname === link.path ? 'text-industrial-yellow' : 'text-gray-300 hover:text-white'
+                  className={`text-sm font-semibold tracking-wider uppercase transition-colors relative group font-body ${
+                    location.pathname === link.path ? 'text-accent-primary text-glow-subtle' : 'text-text-muted hover:text-text-primary'
                   }`}
                 >
                   {link.name}
                   <span
-                    className={`absolute -bottom-2 left-0 w-full h-[2px] bg-industrial-yellow transform origin-left transition-transform duration-300 ${
+                    className={`absolute -bottom-2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent-primary to-transparent transform origin-left transition-transform duration-300 ${
                       location.pathname === link.path ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                     }`}
                   />
@@ -119,7 +119,7 @@ const Navbar = () => {
             })}
             <Link
               to="/quote"
-              className="px-6 py-2 border border-industrial-yellow text-industrial-yellow font-bold uppercase tracking-wider text-sm hover:bg-industrial-yellow hover:text-deep-black transition-all box-glow"
+              className="px-6 py-2 btn-secondary-gradient text-accent-primary font-bold uppercase tracking-wider text-sm hover:text-glow-primary transition-all box-glow-hover font-body"
             >
               Request Quote
             </Link>
@@ -127,7 +127,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden relative z-50 text-white p-2"
+            className="lg:hidden relative z-50 text-text-primary p-2 hover:text-accent-primary transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -143,7 +143,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="fixed inset-0 z-30 bg-deep-black flex flex-col items-center justify-center pt-20"
+            className="fixed inset-0 z-30 bg-bg-deep flex flex-col items-center justify-center pt-20 industrial-grid"
           >
             <div className="flex flex-col items-center gap-6 w-full px-6">
               {navLinks.map((link, index) => {
@@ -157,7 +157,7 @@ const Navbar = () => {
                       className="w-full"
                     >
                       <div className="text-center mb-4">
-                        <span className="text-2xl font-heading font-bold uppercase tracking-widest text-industrial-yellow">
+                        <span className="text-2xl font-display font-bold uppercase tracking-widest text-accent-primary text-glow-subtle">
                           {link.name}
                         </span>
                       </div>
@@ -172,8 +172,8 @@ const Navbar = () => {
                             <Link
                               to={dropdownItem.path}
                               onClick={() => setMobileMenuOpen(false)}
-                              className={`text-lg font-semibold uppercase tracking-wider block text-left ${
-                                location.pathname === dropdownItem.path ? 'text-industrial-yellow' : 'text-gray-300 hover:text-white'
+                              className={`text-lg font-semibold uppercase tracking-wider block text-left font-body ${
+                                location.pathname === dropdownItem.path ? 'text-accent-primary' : 'text-text-muted hover:text-text-primary'
                               }`}
                             >
                               {dropdownItem.name}
@@ -181,7 +181,7 @@ const Navbar = () => {
                           </motion.div>
                         ))}
                       </div>
-                      <div className="border-b border-gunmetal-gray mt-4"></div>
+                      <div className="border-b border-border-subtle mt-4"></div>
                     </motion.div>
                   );
                 }
@@ -192,13 +192,13 @@ const Navbar = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     key={link.name}
-                    className="w-full text-center border-b border-gunmetal-gray pb-4"
+                    className="w-full text-center border-b border-border-subtle pb-4"
                   >
                     <Link
                       to={link.path}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`text-2xl font-heading font-bold uppercase tracking-widest ${
-                        location.pathname === link.path ? 'text-industrial-yellow' : 'text-white'
+                      className={`text-2xl font-display font-bold uppercase tracking-widest font-body ${
+                        location.pathname === link.path ? 'text-accent-primary text-glow-subtle' : 'text-text-primary'
                       }`}
                     >
                       {link.name}
@@ -215,7 +215,7 @@ const Navbar = () => {
                 <Link
                   to="/quote"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-8 py-4 bg-industrial-yellow text-deep-black font-bold uppercase tracking-widest block w-full text-center"
+                  className="px-8 py-4 btn-primary-gradient text-deep-black font-bold uppercase tracking-widest block w-full text-center font-body"
                 >
                   Request Quote
                 </Link>

@@ -254,7 +254,7 @@ const TeamMembers = () => {
                           src={
                             teamMember.image.startsWith('http')
                               ? teamMember.image
-                              : `http://localhost:5000${teamMember.image}`
+                              : `${import.meta.env.VITE_BACKEND_URL || ''}${teamMember.image}`
                           }
                           alt={teamMember.name}
                           className="w-12 h-12 rounded-full object-cover border border-[#333]"

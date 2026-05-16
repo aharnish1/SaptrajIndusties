@@ -15,7 +15,7 @@ const TeamSection = () => {
       setLoading(true);
       setError(null);
       // Fetch only active team members for public display
-      const response = await fetch('http://localhost:5000/api/team-members?activeOnly=true');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/team-members?activeOnly=true`);
       const data = await response.json();
       setTeamMembers(data.data || []);
     } catch (err) {

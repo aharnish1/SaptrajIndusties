@@ -19,19 +19,19 @@ const ProcessTimeline = () => {
   });
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#080808] relative overflow-hidden">
+    <section ref={containerRef} className="py-24 bg-bg-dark relative overflow-hidden industrial-grid">
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center mb-20">
-          <span className="text-industrial-yellow uppercase tracking-widest font-bold text-sm">Workflow</span>
-          <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mt-4 mb-6">Manufacturing Process</h2>
-          <div className="w-24 h-1 bg-industrial-yellow mx-auto"></div>
+          <span className="text-accent-primary uppercase tracking-widest font-bold text-sm font-body">Workflow</span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary mt-4 mb-6 steel-heading" data-text="Manufacturing Process">Manufacturing Process</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent mx-auto"></div>
         </div>
 
         <div className="relative max-w-4xl mx-auto">
           {/* Vertical Progress Line */}
-          <div className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-[2px] bg-[#222]">
+          <div className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-[2px] bg-metal-dark">
             <motion.div 
-              className="absolute top-0 left-0 right-0 bg-industrial-yellow shadow-[0_0_15px_#FFD400]"
+              className="absolute top-0 left-0 right-0 bg-accent-primary shadow-[0_0_15px_rgba(255,122,0,0.5)]"
               style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
             />
           </div>
@@ -43,12 +43,12 @@ const ProcessTimeline = () => {
               <div className="hidden md:block w-5/12"></div>
 
               {/* Center Node */}
-              <div className="absolute left-[15px] md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-deep-black border-2 border-gunmetal-gray flex items-center justify-center z-10 transition-colors duration-300">
+              <div className="absolute left-[15px] md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-bg-deep border-2 border-metal-medium flex items-center justify-center z-10 transition-colors duration-300">
                 <motion.div 
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true, margin: "-100px" }}
-                  className="w-3 h-3 rounded-full bg-industrial-yellow shadow-[0_0_10px_#FFD400]"
+                  className="w-3 h-3 rounded-full bg-accent-primary shadow-[0_0_10px_rgba(255,122,0,0.5)]"
                 />
               </div>
 
@@ -60,12 +60,12 @@ const ProcessTimeline = () => {
                 transition={{ duration: 0.5 }}
                 className="w-full pl-16 md:pl-0 md:w-5/12"
               >
-                <div className={`p-6 border border-[#333] bg-gunmetal-gray/50 backdrop-blur-sm rounded-lg hover:border-industrial-yellow transition-colors relative group ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
-                  <span className="absolute -top-6 text-6xl font-bold font-heading text-white opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+                <div className={`p-6 border border-border-subtle bg-metal-dark/50 backdrop-blur-sm rounded-lg hover:border-accent-primary transition-colors relative group box-glow-hover ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                  <span className="absolute -top-6 text-6xl font-bold font-display text-text-primary opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
                     {process.step}
                   </span>
-                  <h3 className="text-xl font-bold text-white mb-3 font-heading">{process.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{process.desc}</p>
+                  <h3 className="text-xl font-bold text-text-primary mb-3 font-display">{process.title}</h3>
+                  <p className="text-text-muted text-sm leading-relaxed font-body">{process.desc}</p>
                 </div>
               </motion.div>
             </div>

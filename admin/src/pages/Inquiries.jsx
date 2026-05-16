@@ -1,8 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Eye, Mail, Trash2, X, Send, CheckCircle } from 'lucide-react';
 import { inquiriesAPI } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+
+// Reply Modal Component (moved outside to prevent re-render on parent state changes)
+const ReplyModal = ({
+  showReplyModal,
+  setShowReplyModal,
+  replyData,
+  setReplyData,
+  handleSendReply,
+  sendingReply
+}) => {
+  if (!showReplyModal) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-4 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-white">
+            Reply to Inquiry
+          </h2>
+
+          <button
+            onClick={() => setShowReplyModal(false)}
+            className="text-gray-400 hover:text-white"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="space-y-4">
+
+          <input
+            type="email"
+            value={replyData.to}
+            readOnly
+            className="w-full px-4 py-2 bg-gunmetal-gray border border-[#333] rounded text-white"
+          />
+
+          <input
+            type="text"
+            value={replyData.subject}
+            onChange={(e) =>
+              setReplyData(prev => ({
+                ...prev,
+                subject: e.target.value
+              }))
+            }
+            className="w-full px-4 py-2 bg-gunmetal-gray border border-[#333] rounded text-white"
+          />
+
+          <textarea
+            rows="6"
+            value={replyData.message}
+            onChange={(e) =>
+              setReplyData(prev => ({
+                ...prev,
+                message: e.target.value
+              }))
+            }
+            className="w-full px-4 py-2 bg-gunmetal-gray border border-[#333] rounded text-white"
+            placeholder="Type your message..."
+          />
+
+        </div>
+
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={handleSendReply}
+            disabled={sendingReply || !replyData.message || replyData.message.trim() === ''}
+            className="flex items-center gap-2 px-6 py-2 bg-industrial-yellow text-deep-black font-bold rounded hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {sendingReply ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send size={18} />
+                Send Reply
+              </>
+            )}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+};
 
 const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
@@ -20,6 +109,7 @@ const Inquiries = () => {
     subject: '',
     message: ''
   });
+  const [sendingReply, setSendingReply] = useState(false);
 
   const fetchInquiries = async () => {
     try {
@@ -144,19 +234,44 @@ const Inquiries = () => {
     setShowReplyModal(true);
   };
 
-  const handleSendReply = () => {
-    alert('Reply sent successfully!');
+  const handleSendReply = useCallback(async () => {
+    // Validate message
+    if (!replyData.message || replyData.message.trim() === '') {
+      alert('Please enter a message before sending.');
+      return;
+    }
 
-    setShowReplyModal(false);
+    try {
+      setSendingReply(true);
 
-    setReplyData({
-      to: '',
-      subject: '',
-      message: ''
-    });
+      // Call API to send reply
+      await inquiriesAPI.reply(selectedInquiry._id || selectedInquiry.id, replyData.message);
 
-    setSelectedInquiry(null);
-  };
+      // Show success message
+      alert('Reply sent successfully!');
+
+      // Close modal
+      setShowReplyModal(false);
+
+      // Clear reply data
+      setReplyData({
+        to: '',
+        subject: '',
+        message: ''
+      });
+
+      setSelectedInquiry(null);
+
+      // Refresh inquiries list
+      fetchInquiries();
+
+    } catch (error) {
+      console.error('Error sending reply:', error);
+      alert(`Failed to send reply: ${error.message}`);
+    } finally {
+      setSendingReply(false);
+    }
+  }, [replyData.message, selectedInquiry]);
 
   const handleDeleteInquiry = async (id) => {
     if (window.confirm('Are you sure you want to delete this inquiry?')) {
@@ -193,6 +308,9 @@ const Inquiries = () => {
       case 'completed':
         return 'bg-green-500/10 text-green-500 border-green-500/20';
 
+      case 'replied':
+        return 'bg-purple-500/10 text-purple-500 border-purple-500/20';
+
       default:
         return 'bg-gray-500/10 text-gray-500 border-gray-500/20';
     }
@@ -204,8 +322,8 @@ const Inquiries = () => {
     console.log('🔍 Debug - selectedInquiry:', selectedInquiry);
 
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <div className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-4 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
 
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-white">
@@ -222,7 +340,7 @@ const Inquiries = () => {
 
           <div className="space-y-4">
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-400 text-sm mb-2">
                   Name
@@ -244,7 +362,7 @@ const Inquiries = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
               <div>
                 <label className="block text-gray-400 text-sm mb-2">
@@ -321,7 +439,7 @@ const Inquiries = () => {
                     {selectedInquiry.attachmentType?.includes('image/') ? (
                       <div className="flex-1">
                         <img
-                          src={`http://localhost:5000${selectedInquiry.attachment}`}
+                          src={`${import.meta.env.VITE_BACKEND_URL || ''}${selectedInquiry.attachment}`}
                           alt={selectedInquiry.attachmentOriginalName || 'Attachment'}
                           className="w-full max-h-48 object-contain rounded border border-[#333] mb-2"
                         />
@@ -346,7 +464,7 @@ const Inquiries = () => {
                   {/* Action Buttons */}
                   <div className="flex gap-2">
                     <a
-                      href={`http://localhost:5000${selectedInquiry.attachment}`}
+                      href={`${import.meta.env.VITE_BACKEND_URL || ''}${selectedInquiry.attachment}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 px-3 py-2 bg-industrial-yellow text-deep-black text-sm font-medium rounded hover:bg-white transition-colors text-center"
@@ -355,7 +473,7 @@ const Inquiries = () => {
                        selectedInquiry.attachmentType?.includes('pdf') ? 'Open PDF' : 'Open File'}
                     </a>
                     <a
-                      href={`http://localhost:5000${selectedInquiry.attachment}`}
+                      href={`${import.meta.env.VITE_BACKEND_URL || ''}${selectedInquiry.attachment}`}
                       download={selectedInquiry.attachmentOriginalName || 'attachment'}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -386,77 +504,6 @@ const Inquiries = () => {
     );
   };
 
-  const ReplyModal = () => {
-    if (!showReplyModal) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <div className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-6 w-full max-w-2xl">
-
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-white">
-              Reply to Inquiry
-            </h2>
-
-            <button
-              onClick={() => setShowReplyModal(false)}
-              className="text-gray-400 hover:text-white"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          <div className="space-y-4">
-
-            <input
-              type="email"
-              value={replyData.to}
-              readOnly
-              className="w-full px-4 py-2 bg-gunmetal-gray border border-[#333] rounded text-white"
-            />
-
-            <input
-              type="text"
-              value={replyData.subject}
-              onChange={(e) =>
-                setReplyData(prev => ({
-                  ...prev,
-                  subject: e.target.value
-                }))
-              }
-              className="w-full px-4 py-2 bg-gunmetal-gray border border-[#333] rounded text-white"
-            />
-
-            <textarea
-              rows="6"
-              value={replyData.message}
-              onChange={(e) =>
-                setReplyData(prev => ({
-                  ...prev,
-                  message: e.target.value
-                }))
-              }
-              className="w-full px-4 py-2 bg-gunmetal-gray border border-[#333] rounded text-white"
-              placeholder="Type your message..."
-            />
-
-          </div>
-
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={handleSendReply}
-              className="flex items-center gap-2 px-6 py-2 bg-industrial-yellow text-deep-black font-bold rounded hover:bg-white transition-colors"
-            >
-              <Send size={18} />
-              Send Reply
-            </button>
-          </div>
-
-        </div>
-      </div>
-    );
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 text-white">
@@ -474,32 +521,27 @@ const Inquiries = () => {
   }
 
   return (
-    <div>
+    <div className="admin-page space-y-6">
 
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-heading font-bold text-white">
-            Inquiries
-          </h1>
-
-          <p className="text-gray-400 mt-2">
-            Manage customer inquiries.
-          </p>
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="admin-page-title">Inquiries</h1>
+          <p className="admin-page-subtitle">Manage customer inquiries.</p>
         </div>
       </div>
 
-      <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray overflow-hidden">
-
-        <table className="w-full text-left border-collapse">
+      <div className="admin-table-card">
+        <div className="admin-table-scroll">
+        <table className="admin-table">
 
           <thead>
             <tr className="bg-gunmetal-gray border-b border-[#333] text-gray-400 text-sm uppercase tracking-wider">
-              <th className="p-4">Name</th>
-              <th className="p-4">Email</th>
-              <th className="p-4">Company</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Date</th>
-              <th className="p-4">Actions</th>
+              <th className="p-3 sm:p-4 whitespace-nowrap">Name</th>
+              <th className="p-3 sm:p-4 whitespace-nowrap">Email</th>
+              <th className="p-3 sm:p-4 whitespace-nowrap">Company</th>
+              <th className="p-3 sm:p-4 whitespace-nowrap">Status</th>
+              <th className="p-3 sm:p-4 whitespace-nowrap">Date</th>
+              <th className="p-3 sm:p-4 whitespace-nowrap">Actions</th>
             </tr>
           </thead>
 
@@ -521,26 +563,26 @@ const Inquiries = () => {
                   }`}
                 >
 
-                  <td className="p-4 text-white">
-                    <div className="flex items-center gap-2">
+                  <td className="p-3 sm:p-4 text-white max-w-[140px] sm:max-w-none">
+                    <div className="flex items-center gap-2 min-w-0">
                       {!inquiry.isRead && (
-                        <div className="w-2 h-2 bg-industrial-yellow rounded-full" />
+                        <div className="w-2 h-2 bg-industrial-yellow rounded-full flex-shrink-0" />
                       )}
-                      <span className={!inquiry.isRead ? 'font-semibold' : ''}>
+                      <span className={`truncate ${!inquiry.isRead ? 'font-semibold' : ''}`}>
                         {inquiry.name}
                       </span>
                     </div>
                   </td>
 
-                  <td className="p-4 text-gray-400">
-                    {inquiry.email}
+                  <td className="p-3 sm:p-4 text-gray-400 max-w-[160px]">
+                    <span className="block truncate">{inquiry.email}</span>
                   </td>
 
-                  <td className="p-4 text-gray-400">
-                    {inquiry.company || '-'}
+                  <td className="p-3 sm:p-4 text-gray-400 max-w-[120px]">
+                    <span className="block truncate">{inquiry.company || '-'}</span>
                   </td>
 
-                  <td className="p-4">
+                  <td className="p-3 sm:p-4">
                     <span className={`px-2 py-1 text-xs rounded border ${getStatusColor(inquiry.status)}`}>
                       {inquiry.status}
                     </span>
@@ -550,7 +592,8 @@ const Inquiries = () => {
                     {new Date(inquiry.date || inquiry.createdAt).toLocaleDateString()}
                   </td>
 
-                  <td className="p-4 flex gap-2">
+                  <td className="p-3 sm:p-4">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
 
                     <button
                       onClick={() => handleViewInquiry(inquiry)}
@@ -588,6 +631,7 @@ const Inquiries = () => {
                       <Trash2 size={18} />
                     </button>
 
+                    </div>
                   </td>
 
                 </tr>
@@ -610,11 +654,18 @@ const Inquiries = () => {
           </tbody>
 
         </table>
-
+        </div>
       </div>
 
       <ViewModal />
-      <ReplyModal />
+      <ReplyModal
+        showReplyModal={showReplyModal}
+        setShowReplyModal={setShowReplyModal}
+        replyData={replyData}
+        setReplyData={setReplyData}
+        handleSendReply={handleSendReply}
+        sendingReply={sendingReply}
+      />
 
     </div>
   );

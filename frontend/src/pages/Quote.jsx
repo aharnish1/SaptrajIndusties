@@ -166,13 +166,13 @@ const Quote = () => {
   return (
     <div className="w-full">
       {/* Hero */}
-      <div className="bg-gunmetal-gray py-20 border-b border-[#333]">
+      <div className="bg-metal-dark py-20 border-b border-border-subtle industrial-grid">
         <div className="container mx-auto px-6 md:px-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-text-primary mb-4 steel-heading" data-text="Request a Quote">
             Request a Quote
           </h1>
 
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-text-muted max-w-2xl mx-auto font-body">
             Provide your requirement details and our engineering team
             will get back to you with a comprehensive proposal.
           </p>
@@ -180,10 +180,10 @@ const Quote = () => {
       </div>
 
       {/* Form */}
-      <section className="py-24 bg-deep-black">
+      <section className="py-24 bg-bg-deep industrial-grid">
         <div className="container mx-auto px-6 md:px-12 max-w-4xl">
-          <div className="bg-[#0A0A0A] border border-gunmetal-gray p-8 rounded-lg relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-industrial-yellow"></div>
+          <div className="card-industrial p-8 rounded-lg relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent"></div>
 
             <form
               ref={formRef}
@@ -192,7 +192,7 @@ const Quote = () => {
             >
               {/* Contact Info */}
               <div>
-                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">
+                <h3 className="text-text-primary font-bold mb-4 uppercase tracking-wider text-sm border-b border-border-subtle pb-2 font-body">
                   1. Contact Information
                 </h3>
 
@@ -238,7 +238,7 @@ const Quote = () => {
 
               {/* Project Specs */}
               <div>
-                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">
+                <h3 className="text-text-primary font-bold mb-4 uppercase tracking-wider text-sm border-b border-border-subtle pb-2 font-body">
                   2. Project Specifications
                 </h3>
 
@@ -274,7 +274,7 @@ const Quote = () => {
 
               {/* File Upload */}
               <div>
-                <h3 className="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-[#222] pb-2">
+                <h3 className="text-text-primary font-bold mb-4 uppercase tracking-wider text-sm border-b border-border-subtle pb-2 font-body">
                   3. Technical Drawings
                 </h3>
 

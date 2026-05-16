@@ -1,4 +1,7 @@
 const Inquiry = require('../models/Inquiry');
+const sendEmail = require('../utils/sendEmail');
+const { createNotification } = require('./notificationController');
+const notificationService = require('../services/notificationService');
 
 // Get all inquiries
 const getInquiries = async (req, res) => {
@@ -103,6 +106,41 @@ const createInquiry = async (req, res) => {
     const savedInquiry = await newInquiry.save();
     
     console.log('🔍 Debug - savedInquiry:', savedInquiry);
+
+    const isQuoteRequest = Boolean(
+      (materialType && materialType.trim()) ||
+      (quantity && String(quantity).trim()) ||
+      req.file
+    );
+
+    // Create notification in database
+    try {
+      await createNotification({
+        type: isQuoteRequest ? 'quote' : 'inquiry',
+        category: 'new',
+        title: isQuoteRequest
+          ? `New Quote Request from ${name}`
+          : `New Inquiry from ${name}`,
+        message: isQuoteRequest
+          ? `${name} submitted a quote request for ${materialType || 'material'} (Qty: ${quantity || 'N/A'})`
+          : `${name} from ${company || 'N/A'} has submitted a new inquiry regarding: ${requirement}`,
+        relatedId: savedInquiry._id,
+        relatedModel: 'Inquiry',
+        priority: isQuoteRequest ? 'urgent' : 'high',
+        actionUrl: `/inquiries?open=${savedInquiry._id}`,
+        data: {
+          inquiryId: savedInquiry._id,
+          name: savedInquiry.name,
+          email: savedInquiry.email,
+          requirement: savedInquiry.requirement,
+          isQuoteRequest
+        }
+      });
+      console.log('✅ Notification created successfully');
+    } catch (notificationError) {
+      console.error('❌ Error creating notification:', notificationError);
+      // Don't fail the request if notification creation fails
+    }
 
     // Emit Socket.IO event for real-time notification
     const io = req.app.get('io');
@@ -270,6 +308,11 @@ const markAsRead = async (req, res) => {
       });
     }
 
+    await notificationService.markRelatedAsRead(
+      inquiry._id,
+      ['inquiry', 'quote']
+    );
+
     res.json({
       success: true,
       message: 'Inquiry marked as read',
@@ -296,6 +339,8 @@ const markAllAsRead = async (req, res) => {
         readAt: new Date() 
       }
     );
+
+    await notificationService.markAllAsRead();
 
     res.json({
       success: true,
@@ -365,6 +410,183 @@ const getInquiryStats = async (req, res) => {
   }
 };
 
+// Reply to inquiry
+const replyToInquiry = async (req, res) => {
+  try {
+    const { message } = req.body;
+    const inquiryId = req.params.id;
+    const adminId = req.user?.id || req.user?._id || 'system';
+
+    console.log('🔧 Reply to inquiry - ID:', inquiryId);
+    console.log('🔧 Reply to inquiry - Admin ID:', adminId);
+    console.log('🔧 Reply to inquiry - Message length:', message?.length);
+
+    // Validate message
+    if (!message || message.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        message: 'Reply message is required'
+      });
+    }
+
+    // Find inquiry
+    const inquiry = await Inquiry.findById(inquiryId);
+    
+    if (!inquiry) {
+      console.error('❌ Inquiry not found:', inquiryId);
+      return res.status(404).json({
+        success: false,
+        message: 'Inquiry not found'
+      });
+    }
+
+    console.log('🔧 Inquiry found - Email:', inquiry.email);
+    console.log('🔧 Inquiry found - Requirement:', inquiry.requirement);
+
+    // Prepare email content
+    const emailSubject = `Re: ${inquiry.requirement || 'Your Inquiry'}`;
+    const emailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reply to Your Inquiry</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          .header {
+            background-color: #FFD700;
+            color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 20px -30px;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 24px;
+          }
+          .content {
+            margin-bottom: 20px;
+          }
+          .reply-message {
+            background-color: #fff;
+            padding: 20px;
+            border-left: 4px solid #FFD700;
+            margin: 20px 0;
+            border-radius: 4px;
+          }
+          .original-inquiry {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+          }
+          .original-inquiry h3 {
+            margin-top: 0;
+            font-size: 16px;
+          }
+          .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Reply to Your Inquiry</h1>
+          </div>
+          <div class="content">
+            <p>Dear ${inquiry.name},</p>
+            <p>Thank you for your inquiry. We have reviewed your request and our response is below:</p>
+            
+            <div class="reply-message">
+              <p>${message.replace(/\n/g, '<br>')}</p>
+            </div>
+            
+            <div class="original-inquiry">
+              <h3>Your Original Inquiry:</h3>
+              <p><strong>Requirement:</strong> ${inquiry.requirement}</p>
+              <p><strong>Message:</strong> ${inquiry.message}</p>
+              ${inquiry.company ? `<p><strong>Company:</strong> ${inquiry.company}</p>` : ''}
+              ${inquiry.phone ? `<p><strong>Phone:</strong> ${inquiry.phone}</p>` : ''}
+            </div>
+            
+            <p>If you have any further questions, please don't hesitate to contact us.</p>
+            <p>Best regards,<br>Saptraj Industries Team</p>
+          </div>
+          <div class="footer">
+            <p>This email was sent in response to your inquiry submitted on ${new Date(inquiry.date).toLocaleDateString()}.</p>
+            <p>&copy; ${new Date().getFullYear()} Saptraj Industries. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Send email
+    console.log('🔧 Attempting to send email to:', inquiry.email);
+    const emailResult = await sendEmail(inquiry.email, emailSubject, emailHtml);
+
+    console.log('🔧 Email result:', emailResult);
+
+    if (!emailResult.success) {
+      console.error('❌ Email send failed:', emailResult.error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send email',
+        error: emailResult.error
+      });
+    }
+
+    // Add reply to inquiry
+    inquiry.replies.push({
+      message: message.trim(),
+      repliedBy: adminId !== 'system' ? adminId : undefined,
+      repliedAt: new Date()
+    });
+
+    // Update status to Replied
+    inquiry.status = 'Replied';
+
+    // Save inquiry
+    await inquiry.save();
+
+    console.log('✅ Reply saved successfully');
+
+    res.json({
+      success: true,
+      message: 'Reply sent successfully',
+      data: inquiry
+    });
+  } catch (error) {
+    console.error('❌ Error replying to inquiry:', error);
+    console.error('❌ Error stack:', error.stack);
+    res.status(500).json({
+      success: false,
+      message: 'Error sending reply',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getInquiries,
   getInquiryById,
@@ -375,5 +597,6 @@ module.exports = {
   getUnreadInquiries,
   getUnreadCount,
   markAsRead,
-  markAllAsRead
+  markAllAsRead,
+  replyToInquiry
 };

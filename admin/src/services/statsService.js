@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/stats';
+const API_URL = `${import.meta.env.VITE_BACKEND_URL || ''}/stats`;
 
 export const getStats = async () => {
   try {

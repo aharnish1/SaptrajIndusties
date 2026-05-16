@@ -1,316 +1,552 @@
 const Project = require('../models/Project');
 const { deleteOldImage } = require('../config/multer');
 
-// Get all projects
+// ============================================
+// GET ALL PROJECTS
+// ============================================
 const getProjects = async (req, res) => {
   try {
-    const { category, status, featured, search, page = 1, limit = 10 } = req.query;
-    
-    // Build query
+
+    const {
+      category,
+      status,
+      featured,
+      search,
+      page = 1,
+      limit = 10
+    } = req.query;
+
+    // ============================================
+    // BUILD QUERY
+    // ============================================
     const query = {};
-    
-    if (category && category !== 'all') {
+
+    // CATEGORY
+    if (
+      category &&
+      category !== 'all'
+    ) {
       query.category = category;
     }
-    
-    if (status && status !== 'all') {
+
+    // STATUS
+    if (
+      status &&
+      status !== 'all'
+    ) {
       query.status = status;
     }
-    
-    if (featured !== undefined) {
-      query.featured = featured === 'true';
+
+    // FEATURED
+    if (
+      featured !== undefined
+    ) {
+      query.featured =
+        featured === 'true';
     }
-    
-    if (search) {
-      query.$text = search;
+
+    // ============================================
+    // SAFE SEARCH
+    // ============================================
+    if (
+      search &&
+      typeof search ===
+        'string' &&
+      search.trim() !== ''
+    ) {
+
+      const safeSearch =
+        search.trim();
+
+      query.$or = [
+        {
+          title: {
+            $regex: safeSearch,
+            $options: 'i'
+          }
+        },
+        {
+          description: {
+            $regex: safeSearch,
+            $options: 'i'
+          }
+        },
+        {
+          client: {
+            $regex: safeSearch,
+            $options: 'i'
+          }
+        },
+        {
+          category: {
+            $regex: safeSearch,
+            $options: 'i'
+          }
+        }
+      ];
     }
-    
-    // Execute query with pagination
-    const projects = await Project.find(query)
-      .sort({ createdAt: -1 })
-      .limit(limit * 1)
-      .skip((page - 1) * limit);
-    
-    const total = await Project.countDocuments(query);
-    
-    res.json({
+
+    // ============================================
+    // PAGINATION
+    // ============================================
+    const pageNumber =
+      parseInt(page) || 1;
+
+    const limitNumber =
+      parseInt(limit) || 10;
+
+    // ============================================
+    // FETCH PROJECTS
+    // ============================================
+    const projects =
+      await Project.find(query)
+        .sort({
+          createdAt: -1
+        })
+        .limit(limitNumber)
+        .skip(
+          (pageNumber - 1) *
+            limitNumber
+        );
+
+    const total =
+      await Project.countDocuments(
+        query
+      );
+
+    // ============================================
+    // RESPONSE
+    // ============================================
+    res.status(200).json({
       success: true,
       data: projects,
       count: projects.length,
       total,
-      page: parseInt(page),
-      pages: Math.ceil(total / limit)
+      page: pageNumber,
+      pages: Math.ceil(
+        total / limitNumber
+      )
     });
+
   } catch (error) {
+
+    console.error(
+      'Error fetching projects:',
+      error
+    );
+
     res.status(500).json({
       success: false,
-      message: 'Error fetching projects',
+      message:
+        'Error fetching projects',
       error: error.message
     });
   }
 };
 
-// Get project by ID
-const getProjectById = async (req, res) => {
+// ============================================
+// GET PROJECT BY ID
+// ============================================
+const getProjectById = async (
+  req,
+  res
+) => {
   try {
-    const project = await Project.findById(req.params.id);
-    
+
+    const project =
+      await Project.findById(
+        req.params.id
+      );
+
     if (!project) {
       return res.status(404).json({
         success: false,
-        message: 'Project not found'
+        message:
+          'Project not found'
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       data: project
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
-      message: 'Error fetching project',
+      message:
+        'Error fetching project',
       error: error.message
     });
   }
 };
 
-// Create new project
-const createProject = async (req, res) => {
+// ============================================
+// CREATE PROJECT
+// ============================================
+const createProject = async (
+  req,
+  res
+) => {
   try {
-    console.log('=== CREATE PROJECT DEBUG ===');
-    console.log('req.body:', req.body);
-    console.log('req.file:', req.file);
-    
-    const { 
-      title, 
-      category, 
-      client, 
-      description, 
-      technologies, 
-      location, 
-      completionDate, 
-      images, 
-      status, 
-      featured 
-    } = req.body;
-    
-    // Handle image upload
-    let imagePath = '';
-    if (req.file) {
-      imagePath = `uploads/projects/${req.file.filename}`;
-    }
 
-    if (!title || !category || !client) {
-      return res.status(400).json({
-        success: false,
-        message: 'Title, category, and client are required'
-      });
-    }
-
-    const newProject = new Project({
+    const {
       title,
       category,
       client,
-      description: description || '',
-      technologies: Array.isArray(technologies) ? technologies : (technologies ? technologies.split(',').map(tech => tech.trim()).filter(tech => tech) : []),
-      location: location || '',
-      completionDate: completionDate || null,
-      images: images || [],
-      image: imagePath,
-      status: status || 'Active',
-      featured: featured || false
-    });
-
-    const savedProject = await newProject.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Project created successfully',
-      data: savedProject
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error creating project',
-      error: error.message
-    });
-  }
-};
-
-// Update project
-const updateProject = async (req, res) => {
-  try {
-    console.log('=== UPDATE PROJECT DEBUG ===');
-    console.log('req.body:', req.body);
-    console.log('req.file:', req.file);
-    
-    const { 
-      title, 
-      category, 
-      client, 
-      description, 
-      technologies, 
-      location, 
-      completionDate, 
-      images, 
-      status, 
-      featured 
+      description,
+      technologies,
+      location,
+      completionDate,
+      images,
+      status,
+      featured
     } = req.body;
-    
-    // Find the current project to get old image path
-    const currentProject = await Project.findById(req.params.id);
-    if (!currentProject) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found'
-      });
-    }
 
-    // Handle image upload
-    let imagePath = currentProject.image; // Keep existing image by default
+    let imagePath = '';
+
     if (req.file) {
-      // Delete old image if it exists
-      if (currentProject.image) {
-        await deleteOldImage(currentProject.image);
-      }
       imagePath = `uploads/projects/${req.file.filename}`;
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(
-      req.params.id,
-      {
+    if (
+      !title ||
+      !category ||
+      !client
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'Title, category, and client are required'
+      });
+    }
+
+    const newProject =
+      new Project({
         title,
         category,
         client,
-        description,
-        technologies: Array.isArray(technologies) ? technologies : (technologies ? technologies.split(',').map(tech => tech.trim()).filter(tech => tech) : []),
-        location,
-        completionDate,
-        images,
-        image: imagePath,
-        status,
-        featured
-      },
-      { new: true, runValidators: true }
-    );
+        description:
+          description || '',
 
-    res.json({
+        technologies:
+          Array.isArray(
+            technologies
+          )
+            ? technologies
+            : technologies
+            ? technologies
+                .split(',')
+                .map((tech) =>
+                  tech.trim()
+                )
+                .filter(
+                  (tech) => tech
+                )
+            : [],
+
+        location:
+          location || '',
+
+        completionDate:
+          completionDate ||
+          null,
+
+        images: images || [],
+
+        image: imagePath,
+
+        status:
+          status || 'Active',
+
+        featured:
+          featured || false
+      });
+
+    const savedProject =
+      await newProject.save();
+
+    res.status(201).json({
       success: true,
-      message: 'Project updated successfully',
-      data: updatedProject
+      message:
+        'Project created successfully',
+      data: savedProject
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
-      message: 'Error updating project',
+      message:
+        'Error creating project',
       error: error.message
     });
   }
 };
 
-// Delete project
-const deleteProject = async (req, res) => {
+// ============================================
+// UPDATE PROJECT
+// ============================================
+const updateProject = async (
+  req,
+  res
+) => {
   try {
-    const deletedProject = await Project.findByIdAndDelete(req.params.id);
+
+    const {
+      title,
+      category,
+      client,
+      description,
+      technologies,
+      location,
+      completionDate,
+      images,
+      status,
+      featured
+    } = req.body;
+
+    const currentProject =
+      await Project.findById(
+        req.params.id
+      );
+
+    if (!currentProject) {
+      return res.status(404).json({
+        success: false,
+        message:
+          'Project not found'
+      });
+    }
+
+    let imagePath =
+      currentProject.image;
+
+    if (req.file) {
+
+      if (
+        currentProject.image
+      ) {
+        await deleteOldImage(
+          currentProject.image
+        );
+      }
+
+      imagePath = `uploads/projects/${req.file.filename}`;
+    }
+
+    const updatedProject =
+      await Project.findByIdAndUpdate(
+        req.params.id,
+        {
+          title,
+          category,
+          client,
+          description,
+
+          technologies:
+            Array.isArray(
+              technologies
+            )
+              ? technologies
+              : technologies
+              ? technologies
+                  .split(',')
+                  .map((tech) =>
+                    tech.trim()
+                  )
+                  .filter(
+                    (tech) =>
+                      tech
+                  )
+              : [],
+
+          location,
+          completionDate,
+          images,
+          image: imagePath,
+          status,
+          featured
+        },
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+
+    res.status(200).json({
+      success: true,
+      message:
+        'Project updated successfully',
+      data: updatedProject
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message:
+        'Error updating project',
+      error: error.message
+    });
+  }
+};
+
+// ============================================
+// DELETE PROJECT
+// ============================================
+const deleteProject = async (
+  req,
+  res
+) => {
+  try {
+
+    const deletedProject =
+      await Project.findByIdAndDelete(
+        req.params.id
+      );
 
     if (!deletedProject) {
       return res.status(404).json({
         success: false,
-        message: 'Project not found'
+        message:
+          'Project not found'
       });
     }
 
-    // Delete associated image if it exists
-    if (deletedProject.image) {
-      await deleteOldImage(deletedProject.image);
+    if (
+      deletedProject.image
+    ) {
+      await deleteOldImage(
+        deletedProject.image
+      );
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
-      message: 'Project deleted successfully',
+      message:
+        'Project deleted successfully',
       data: deletedProject
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
-      message: 'Error deleting project',
+      message:
+        'Error deleting project',
       error: error.message
     });
   }
 };
 
-// Get project categories
-const getProjectCategories = async (req, res) => {
-  try {
-    const categories = await Project.distinct('category');
-    
-    res.json({
-      success: true,
-      data: categories
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching categories',
-      error: error.message
-    });
-  }
-};
+// ============================================
+// GET PROJECT CATEGORIES
+// ============================================
+const getProjectCategories =
+  async (req, res) => {
+    try {
 
-// Get project statistics
-const getProjectStats = async (req, res) => {
-  try {
-    console.log('🔍 Project Stats Debug - Function called');
-    
-    // Safe count queries with fallbacks
-    const total = await Project.countDocuments().catch(() => 0);
-    const completed = await Project.countDocuments({ status: 'Completed' }).catch(() => 0);
-    const inProgress = await Project.countDocuments({ status: 'In Progress' }).catch(() => 0);
-    const active = await Project.countDocuments({ status: 'Active' }).catch(() => 0);
-    const onHold = await Project.countDocuments({ status: 'On Hold' }).catch(() => 0);
-    const featured = await Project.countDocuments({ featured: true }).catch(() => 0);
-    
-    const categories = await Project.distinct('category').catch(() => []);
-    
-    const result = {
-      total,
-      completed,
-      inProgress,
-      active,
-      onHold,
-      featured,
-      categories: categories.length
-    };
-    
-    console.log('🔍 Project Stats Debug - Final result:', result);
+      const categories =
+        await Project.distinct(
+          'category'
+        );
 
-    res.status(200).json({
-      success: true,
-      data: result
-    });
-  } catch (error) {
-    console.error('🔍 Project Stats Debug - Error occurred:', error);
-    console.error('🔍 Project Stats Debug - Error stack:', error.stack);
-    
-    // Return fallback data instead of crashing
-    const fallbackResult = {
-      total: 0,
-      completed: 0,
-      inProgress: 0,
-      active: 0,
-      onHold: 0,
-      featured: 0,
-      categories: 0
-    };
-    
-    res.status(200).json({
-      success: true,
-      data: fallbackResult,
-      warning: 'Using fallback data due to error'
-    });
-  }
-};
+      res.status(200).json({
+        success: true,
+        data: categories
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          'Error fetching categories',
+        error: error.message
+      });
+    }
+  };
+
+// ============================================
+// GET PROJECT STATS
+// ============================================
+const getProjectStats =
+  async (req, res) => {
+    try {
+
+      const total =
+        await Project.countDocuments();
+
+      const completed =
+        await Project.countDocuments(
+          {
+            status:
+              'Completed'
+          }
+        );
+
+      const inProgress =
+        await Project.countDocuments(
+          {
+            status:
+              'In Progress'
+          }
+        );
+
+      const active =
+        await Project.countDocuments(
+          {
+            status: 'Active'
+          }
+        );
+
+      const onHold =
+        await Project.countDocuments(
+          {
+            status: 'On Hold'
+          }
+        );
+
+      const featured =
+        await Project.countDocuments(
+          {
+            featured: true
+          }
+        );
+
+      const categories =
+        await Project.distinct(
+          'category'
+        );
+
+      res.status(200).json({
+        success: true,
+        data: {
+          total,
+          completed,
+          inProgress,
+          active,
+          onHold,
+          featured,
+          categories:
+            categories.length
+        }
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        message:
+          'Error fetching project stats',
+        error: error.message
+      });
+    }
+  };
 
 module.exports = {
   getProjects,

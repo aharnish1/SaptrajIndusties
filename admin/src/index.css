@@ -9,7 +9,7 @@
   --color-electric-glow: #FFE666;
   
   --font-sans: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Outfit', system-ui, sans-serif;
+  --font-heading: 'Outer', display;
 }
 
 @layer base {
@@ -31,5 +31,46 @@
   }
   .metallic-shine {
     background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+  }
+
+  /* Admin responsive layout utilities */
+  .admin-page {
+    @apply w-full max-w-full min-w-0;
+  }
+
+  .admin-page-header {
+    @apply flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6 sm:mb-8;
+  }
+
+  .admin-page-title {
+    @apply text-2xl sm:text-3xl font-heading font-bold text-white break-words;
+  }
+
+  .admin-page-subtitle {
+    @apply text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base;
+  }
+
+  .admin-stats-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4;
+  }
+
+  .admin-stats-grid-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4;
+  }
+
+  .admin-table-card {
+    @apply bg-[#0A0A0A] rounded-lg border border-gunmetal-gray overflow-hidden w-full max-w-full;
+  }
+
+  .admin-table-scroll {
+    @apply overflow-x-auto w-full max-w-full;
+  }
+
+  .admin-table {
+    @apply w-full min-w-[900px] text-left border-collapse;
+  }
+
+  .admin-filters {
+    @apply flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-center w-full;
   }
 }

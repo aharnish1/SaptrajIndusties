@@ -191,6 +191,12 @@ router.delete(
   inquiryController.deleteInquiry
 );
 
+// REPLY TO INQUIRY
+router.post(
+  '/inquiries/:id/reply',
+  inquiryController.replyToInquiry
+);
+
 // ============================================
 // CONTACT API
 // ============================================
@@ -232,6 +238,13 @@ router.use('/jobs', require('./jobs'));
 
 // USE TEAM MEMBERS ROUTES
 router.use('/team-members', require('./teamMembers'));
+
+// ============================================
+// NOTIFICATIONS API
+// ============================================
+
+// USE NOTIFICATIONS ROUTES
+router.use('/notifications', require('./notifications'));
 
 // ============================================
 // EXPORT ROUTER

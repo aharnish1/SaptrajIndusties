@@ -15,7 +15,7 @@ const StatsSection = () => {
 
     try {
 
-      const response = await axios.get('http://localhost:5000/stats');
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL || ''}/stats`);
 
       console.log('Stats API response:', response.data);
 
@@ -51,7 +51,7 @@ const StatsSection = () => {
   };
 
   return (
-    <section className="bg-[#111] py-16">
+    <section className="bg-bg-muted py-16 industrial-grid">
       <div className="max-w-7xl mx-auto px-4">
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -60,14 +60,14 @@ const StatsSection = () => {
 
             <div
               key={index}
-              className="bg-black border border-[#333] rounded-xl p-8 text-center shadow-lg"
+              className="card-industrial rounded-xl p-8 text-center"
             >
 
-              <h2 className="text-5xl font-bold text-industrial-yellow mb-4">
+              <h2 className="text-5xl font-bold text-accent-primary mb-4 font-display text-glow-subtle">
                 {stat.value}
               </h2>
 
-              <p className="text-gray-300 text-lg tracking-wide">
+              <p className="text-text-secondary text-lg tracking-wide font-body">
                 {stat.label}
               </p>
 

@@ -4,6 +4,7 @@ import Button from '../components/UI/Button';
 import { MapPin, Phone, Mail, Loader2 } from 'lucide-react';
 import { inquiriesAPI } from '../services/api';
 import { toast } from 'react-hot-toast';
+import aboutBg from "../assets/aboutBg.jpeg";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,7 +50,7 @@ const Contact = () => {
         style: {
           background: '#0A0A0A',
           color: '#fff',
-          border: '1px solid #FFD000',
+          border: '1px solid #FF7A00',
         },
       });
 
@@ -80,53 +81,67 @@ const Contact = () => {
 
   return (
     <div className="w-full">
-      <div className="bg-gunmetal-gray py-20 border-b border-[#333]">
-        <div className="container mx-auto px-6 md:px-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">Contact Us</h1>
-          <p className="text-gray-400 max-w-2xl mx-auto">Get in touch with Saptraj Industries for your precision fabrication needs.</p>
-        </div>
-      </div>
+      <div
+              className="relative py-32 md:py-40 border-b border-border-subtle bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${aboutBg})`,
+              }}
+            >
+              <div className="absolute inset-0 bg-black/70"></div>
+              <div className="absolute inset-0 industrial-grid opacity-20"></div>
       
-      <section className="py-24 bg-deep-black">
+              <div className="relative container mx-auto px-4 sm:px-6 md:px-12 text-center z-10">
+                <h1 className="text-4xl md:text-6xl font-display font-bold text-text-primary mb-4 steel-heading" data-text="Contact Us">
+                  Contact Us
+                </h1>
+      
+                <p className="text-text-muted max-w-2xl mx-auto font-body">Get in touch with Saptraj Industries for your precision fabrication needs.</p>
+              </div>
+            </div>
+        
+      
+    
+      
+      <section className="py-24 bg-bg-deep industrial-grid">
         <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row gap-16">
           <div className="w-full md:w-1/3">
-            <h2 className="text-2xl font-heading font-bold text-white mb-8 border-l-4 border-industrial-yellow pl-4">Contact Information</h2>
+            <h2 className="text-2xl font-display font-bold text-text-primary mb-8 border-l-4 border-accent-primary pl-4">Contact Information</h2>
             <div className="space-y-8">
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-gunmetal-gray rounded flex items-center justify-center shrink-0 border border-[#333]">
-                  <MapPin className="text-industrial-yellow" />
+                <div className="w-12 h-12 bg-metal-dark rounded flex items-center justify-center shrink-0 border border-border-subtle box-glow-hover">
+                  <MapPin className="text-accent-primary" />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold mb-1">Factory Location</h4>
-                  <p className="text-gray-400 text-sm">GATE NO.262 NANEKARWADI, OPP GANDHARV HOTEL, ALANDI PHATA,
+                  <h4 className="text-text-primary font-bold mb-1 font-body">Factory Location</h4>
+                  <p className="text-text-muted text-sm font-body">GATE NO.262 NANEKARWADI, OPP GANDHARV HOTEL, ALANDI PHATA,
                   CHAKAN, TAL - KHED, DIST, PUNE - 410501, MAHARASHTRA, INDIA.</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-gunmetal-gray rounded flex items-center justify-center shrink-0 border border-[#333]">
-                  <Phone className="text-industrial-yellow" />
+                <div className="w-12 h-12 bg-metal-dark rounded flex items-center justify-center shrink-0 border border-border-subtle box-glow-hover">
+                  <Phone className="text-accent-primary" />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold mb-1">Phone Number</h4>
-                  <p className="text-gray-400 text-sm">+91 7588735608</p>
+                  <h4 className="text-text-primary font-bold mb-1 font-body">Phone Number</h4>
+                  <p className="text-text-muted text-sm font-body">+91 7588735608</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-gunmetal-gray rounded flex items-center justify-center shrink-0 border border-[#333]">
-                  <Mail className="text-industrial-yellow" />
+                <div className="w-12 h-12 bg-metal-dark rounded flex items-center justify-center shrink-0 border border-border-subtle box-glow-hover">
+                  <Mail className="text-accent-primary" />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold mb-1">Email Address</h4>
-                  <p className="text-gray-400 text-sm">saptarajindustries@gmail.com</p>
+                  <h4 className="text-text-primary font-bold mb-1 font-body">Email Address</h4>
+                  <p className="text-text-muted text-sm font-body">saptarajindustries@gmail.com</p>
                 </div>
               </div>
             </div>
           </div>
           
           <div className="w-full md:w-2/3">
-            <div className="bg-[#0A0A0A] border border-gunmetal-gray p-8 rounded-lg relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-industrial-yellow"></div>
-              <h2 className="text-2xl font-heading font-bold text-white mb-6">Send us a Message</h2>
+            <div className="card-industrial p-8 rounded-lg relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent"></div>
+              <h2 className="text-2xl font-display font-bold text-text-primary mb-6">Send us a Message</h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input 

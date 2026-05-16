@@ -2,12 +2,15 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Backend URL helper for file uploads/images
+export const getBackendUrl = () => import.meta.env.VITE_BACKEND_URL || '';
 
 // Request interceptor to add auth token if available
 API.interceptors.request.use(
@@ -343,6 +346,19 @@ export const inquiriesAPI = {
       throw new Error(error.response?.data?.message || 'Failed to mark all inquiries as read');
     }
   },
+  reply: async (id, message) => {
+    try {
+      console.log('🔧 Frontend API - Sending reply to inquiry:', id);
+      console.log('🔧 Frontend API - Message length:', message?.length);
+      const response = await API.post(`/inquiries/${id}/reply`, { message });
+      console.log('🔧 Frontend API - Reply response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Frontend API - Reply error:', error);
+      console.error('❌ Frontend API - Error response:', error.response?.data);
+      throw new Error(error.response?.data?.message || 'Failed to send reply');
+    }
+  },
 };
 
 // Contact API
@@ -546,6 +562,66 @@ export const jobApplicationsAPI = {
   },
 };
 
+// Notifications API
+export const notificationsAPI = {
+  getAll: async (params = {}) => {
+    try {
+      const response = await API.get('/notifications', { params });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch notifications');
+    }
+  },
+  getUnread: async (params = {}) => {
+    try {
+      const response = await API.get('/notifications/unread', { params });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch unread notifications');
+    }
+  },
+  getUnreadCount: async () => {
+    try {
+      const response = await API.get('/notifications/unread-count');
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch notification count');
+    }
+  },
+  getStats: async () => {
+    try {
+      const response = await API.get('/notifications/stats');
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch notification stats');
+    }
+  },
+  markAsRead: async (id) => {
+    try {
+      const response = await API.put(`/notifications/${id}/read`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to mark notification as read');
+    }
+  },
+  markAllAsRead: async () => {
+    try {
+      const response = await API.put('/notifications/read-all', {});
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to mark all notifications as read');
+    }
+  },
+  delete: async (id) => {
+    try {
+      const response = await API.delete(`/notifications/${id}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to delete notification');
+    }
+  },
+};
+
 // Health check
 // Team Members API
 export const teamMembersAPI = {
@@ -628,7 +704,7 @@ export const teamMembersAPI = {
 
 export const healthCheck = async () => {
   try {
-    const response = await API.get('/health', { baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000' });
+    const response = await API.get('/health', { baseURL: import.meta.env.VITE_BACKEND_URL || '' });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Backend is not responding');

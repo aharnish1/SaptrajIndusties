@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ServiceCard from '../ServiceCard';
-import { Settings, Zap, Wrench, Package, Cpu, Factory } from 'lucide-react';
+import { Settings, Zap, Wrench, Package, Cpu, Factory,Paintbrush,
+  BrushCleaning } from 'lucide-react';
 
 const services = [
   { 
@@ -45,16 +46,30 @@ const services = [
     title: 'Electric Panel Fabrication', 
     description: 'Custom engineered electric control panels built to exact specifications.',
     stats: ['IEC/UL Compliant', 'Custom Design', 'Full Assembly']
-  }
+  },
+  {
+  id: 'industrial-painting-services',
+  icon: Paintbrush,
+  title: 'Industrial Painting Services',
+  description: 'Professional industrial painting and coating solutions for machinery, structures, and fabricated components.',
+  stats: ['Powder Coating', 'Anti-Corrosion', 'Surface Finishing']
+ },
+ {
+  id: 'metal-surface-treatment',
+  icon: Wrench,
+  title: 'Metal Surface Treatment',
+  description: 'Advanced surface preparation and treatment services for enhanced durability and finish quality.',
+  stats: ['Sand Blasting', 'Rust Protection', 'Chemical Treatment']
+ }
 ];
 
 const ServicesSection = () => {
   return (
-    <section className="py-24 bg-deep-black relative overflow-hidden">
+    <section className="py-24 bg-bg-deep relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,212,0,0.05)_0%,transparent_70%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:60px_60px] opacity-20" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,122,0,0.08)_0%,transparent_70%)]" />
+        <div className="absolute inset-0 industrial-grid opacity-30" />
       </div>
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -65,13 +80,13 @@ const ServicesSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-sm md:text-base tracking-[3px] uppercase text-gray-400 mb-4">
+            <h3 className="text-sm md:text-base tracking-[3px] uppercase text-accent-primary mb-4 font-body">
               CAPABILITIES
             </h3>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary mb-6 steel-heading" data-text="Manufacturing Services">
               Manufacturing Services
             </h2>
-            <p className="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            <p className="text-text-muted text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-body">
               Advanced metal fabrication solutions with precision engineering, 
               cutting-edge technology, and uncompromising quality standards.
             </p>

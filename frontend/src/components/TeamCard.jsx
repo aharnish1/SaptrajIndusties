@@ -12,7 +12,7 @@ const TeamCard = ({ member }) => {
             member.image
               ? member.image.startsWith('http')
                 ? member.image
-                : `http://localhost:5000${member.image}`
+                : `${import.meta.env.VITE_BACKEND_URL || ''}${member.image}`
               : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.name || 'User') + '&background=0a0a0a&color=fff&size=200'
           }
           alt={member.name}

@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-
-import Hero3DScene from '../3d/Hero3DScene';
+import aboutBg from "../../assets/aboutBg.jpeg";
 import Button from '../UI/Button';
 
 const ServiceHero3D = ({ service }) => {
@@ -18,16 +17,12 @@ const ServiceHero3D = ({ service }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
           
           {/* LEFT SIDE - 3D MODEL */}
-          <div className="relative h-[350px] md:h-[500px] lg:h-full flex items-center justify-center">
-
-            <div className="absolute inset-0 rounded-2xl overflow-hidden">
-              <Hero3DScene
-                modelPath={service?.model}
-                serviceType={service?.id}
-              />
-            </div>
-
-          </div>
+          <div
+                  className="relative py-32 md:py-40 border-b border-[#333] bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${aboutBg})`,
+                  }}
+          ></div>
 
           {/* RIGHT SIDE - CONTENT */}
           <div className="relative z-30 text-center lg:text-left">

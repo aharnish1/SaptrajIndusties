@@ -308,17 +308,15 @@ export const inquiriesAPI = {
   // Notification system methods
   getUnread: async () => {
     try {
-      console.log('🔍 Frontend API Debug - Making request to /inquiries/unread');
+      console.log('🔍 Admin API Debug - Making request to /inquiries/unread');
       const response = await API.get('/inquiries/unread');
-      console.log('🔍 Frontend API Debug - Full response:', response);
-      console.log('🔍 Frontend API Debug - Response data:', response.data);
-      console.log('🔍 Frontend API Debug - Response status:', response.status);
+      console.log('🔍 Admin API Debug - Full response:', response);
       return response.data;
     } catch (error) {
-      console.error('🔍 Frontend API Debug - Error:', error);
-      console.error('🔍 Frontend API Debug - Error response:', error.response);
-      console.error('🔍 Frontend API Debug - Error status:', error.response?.status);
-      console.error('🔍 Frontend API Debug - Error message:', error.response?.data?.message);
+      console.error('🔍 Admin API Debug - Error:', error);
+      console.error('🔍 Admin API Debug - Error response:', error.response);
+      console.error('🔍 Admin API Debug - Error status:', error.response?.status);
+      console.error('🔍 Admin API Debug - Error message:', error.response?.data?.message);
       throw new Error(error.response?.data?.message || 'Failed to fetch unread inquiries');
     }
   },

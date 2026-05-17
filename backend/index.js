@@ -29,7 +29,7 @@ const io = new Server(server, {
     origin: [
       process.env.FRONTEND_URL,
       process.env.ADMIN_URL,
-      'https://saptraj-industries.vercel.app'
+      process.env.CLIENT_URL
     ].filter(Boolean),
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true

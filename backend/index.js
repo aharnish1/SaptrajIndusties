@@ -27,7 +27,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      'https://saptraj-industries.vercel.app',
+      process.env.FRONTEND_URL,
       process.env.ADMIN_URL,
       'https://saptraj-industries.vercel.app'
     ].filter(Boolean),

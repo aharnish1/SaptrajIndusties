@@ -28,7 +28,7 @@ const io = new Server(server, {
   cors: {
     origin: [
       'https://saptraj-industries.vercel.app',
-      'https://saptraj-industries-sable.vercel.app',
+      process.env.ADMIN_URL,
       'https://saptraj-industries.vercel.app'
     ].filter(Boolean),
     methods: ["GET", "POST", "PATCH", "DELETE"],

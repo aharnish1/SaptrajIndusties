@@ -554,20 +554,26 @@ const replyToInquiry = async (req, res) => {
     // Save inquiry
     await inquiry.save();
 
-    console.log('✅ Reply saved successfully');
+    console.log('✅ Reply saved to database successfully');
 
     // Send email asynchronously (fire and forget) - don't block response
+    console.log('🔧 Starting async email send...');
+    
     sendEmail(inquiry.email, emailSubject, emailHtml)
       .then(emailResult => {
+        console.log('📧 Async email result:', emailResult);
         if (emailResult.success) {
-          console.log('✅ Email sent asynchronously:', emailResult.messageId);
+          console.log('✅ Async email sent successfully! MessageId:', emailResult.messageId);
         } else {
           console.error('❌ Async email send failed:', emailResult.error);
         }
       })
       .catch(emailError => {
-        console.error('❌ Async email error:', emailError.message);
+        console.error('❌ Async email exception:', emailError.message);
+        console.error('❌ Async email stack:', emailError.stack);
       });
+
+    console.log('🔧 Returning response to client');
 
     res.json({
       success: true,

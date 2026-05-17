@@ -1,56 +1,83 @@
 const nodemailer = require('nodemailer');
 
-/**
- * Send email using Nodemailer
- * @param {string} to - Recipient email address
- * @param {string} subject - Email subject
- * @param {string} html - HTML content of the email
- * @returns {Promise<Object>} - Result object with success status
- */
 const sendEmail = async (to, subject, html) => {
+  console.log('===========================================');
+  console.log('📧 EMAIL SERVICE - Starting email send');
+  console.log('📧 To:', to);
+  console.log('📧 Subject:', subject);
+  console.log('===========================================');
+
+  // Check environment variables
+  const emailUser = process.env.EMAIL_USER;
+  const emailPass = process.env.EMAIL_PASS;
+
+  console.log('📧 EMAIL_USER exists:', !!emailUser);
+  console.log('📧 EMAIL_PASS exists:', !!emailPass);
+
+  if (!emailUser || !emailPass) {
+    console.error('❌ Missing EMAIL_USER or EMAIL_PASS in environment variables');
+    return { success: false, error: 'Email configuration missing' };
+  }
+
   try {
-    console.log('📧 Email Service - Starting email send');
-    console.log('📧 Email Service - To:', to);
-    console.log('📧 Email Service - Subject:', subject);
-    console.log('📧 Email Service - EMAIL_USER exists:', !!process.env.EMAIL_USER);
-    console.log('📧 Email Service - EMAIL_PASS exists:', !!process.env.EMAIL_PASS);
-    console.log('📧 Email Service - EMAIL_USER value:', process.env.EMAIL_USER?.substring(0, 5) + '...');
-
-    // Create transporter using environment variables
+    // Create transporter with timeout protection
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: process.env.EMAIL_PORT || 587,
-      secure: false, // true for 465, false for other ports
+      service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
+        user: emailUser,
+        pass: emailPass
+      },
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 10000,   // 10 seconds
+      socketTimeout: 15000       // 15 seconds
     });
 
-    console.log('📧 Email Service - Transporter created');
+    console.log('📧 Transporter created with timeout config');
 
-    // Verify transporter configuration
-    console.log('📧 Email Service - Verifying transporter...');
-    await transporter.verify();
-    console.log('📧 Email Service - Transporter verified successfully');
+    // Verify transporter with timeout
+    console.log('📧 Verifying transporter...');
+    await Promise.race([
+      transporter.verify(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Transporter verify timeout')), 8000)
+      )
+    ]);
+    console.log('✅ Transporter verified successfully');
 
-    // Send email
-    console.log('📧 Email Service - Sending email...');
-    const info = await transporter.sendMail({
-      from: `"Saptraj Industries" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      html
-    });
+    // Send email with timeout
+    console.log('📧 Sending email...');
+    const info = await Promise.race([
+      transporter.sendMail({
+        from: `"Saptraj Industries" <${emailUser}>`,
+        to,
+        subject,
+        html
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Email send timeout')), 12000)
+      )
+    ]);
 
-    console.log('✅ Email sent successfully:', info.messageId);
+    console.log('✅ Email sent successfully!');
+    console.log('📧 Message ID:', info.messageId);
+    console.log('===========================================');
+
     return { success: true, messageId: info.messageId };
+
   } catch (error) {
-    console.error('❌ Error sending email:', error);
+    console.error('===========================================');
+    console.error('❌ EMAIL SERVICE - Error occurred:');
+    console.error('❌ Error name:', error.name);
+    console.error('❌ Error message:', error.message);
     console.error('❌ Error code:', error.code);
-    console.error('❌ Error response:', error.response);
-    console.error('❌ Error command:', error.command);
-    return { success: false, error: error.message, code: error.code };
+    console.error('❌ Error stack:', error.stack);
+    console.error('===========================================');
+
+    return { 
+      success: false, 
+      error: error.message,
+      code: error.code 
+    };
   }
 };
 

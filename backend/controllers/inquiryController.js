@@ -541,21 +541,6 @@ const replyToInquiry = async (req, res) => {
       </html>
     `;
 
-    // Send email
-    console.log('🔧 Attempting to send email to:', inquiry.email);
-    const emailResult = await sendEmail(inquiry.email, emailSubject, emailHtml);
-
-    console.log('🔧 Email result:', emailResult);
-
-    if (!emailResult.success) {
-      console.error('❌ Email send failed:', emailResult.error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to send email',
-        error: emailResult.error
-      });
-    }
-
     // Add reply to inquiry
     inquiry.replies.push({
       message: message.trim(),
@@ -570,6 +555,19 @@ const replyToInquiry = async (req, res) => {
     await inquiry.save();
 
     console.log('✅ Reply saved successfully');
+
+    // Send email asynchronously (fire and forget) - don't block response
+    sendEmail(inquiry.email, emailSubject, emailHtml)
+      .then(emailResult => {
+        if (emailResult.success) {
+          console.log('✅ Email sent asynchronously:', emailResult.messageId);
+        } else {
+          console.error('❌ Async email send failed:', emailResult.error);
+        }
+      })
+      .catch(emailError => {
+        console.error('❌ Async email error:', emailError.message);
+      });
 
     res.json({
       success: true,

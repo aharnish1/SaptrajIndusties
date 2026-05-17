@@ -412,36 +412,49 @@ const getInquiryStats = async (req, res) => {
 
 // Reply to inquiry
 const replyToInquiry = async (req, res) => {
+  console.log('===========================================');
+  console.log('🔧 REPLY API - Request received');
+  console.log('🔧 REPLY API - Method:', req.method);
+  console.log('🔧 REPLY API - URL:', req.url);
+  console.log('🔧 REPLY API - Params:', req.params);
+  console.log('===========================================');
+  
   try {
     const { message } = req.body;
     const inquiryId = req.params.id;
     const adminId = req.user?.id || req.user?._id || 'system';
 
-    console.log('🔧 Reply to inquiry - ID:', inquiryId);
-    console.log('🔧 Reply to inquiry - Admin ID:', adminId);
-    console.log('🔧 Reply to inquiry - Message length:', message?.length);
+    console.log('🔧 REPLY API - ID:', inquiryId);
+    console.log('🔧 REPLY API - Admin ID:', adminId);
+    console.log('🔧 REPLY API - Message length:', message?.length);
 
     // Validate message
     if (!message || message.trim() === '') {
+      console.log('🔧 REPLY API - Empty message, returning 400');
       return res.status(400).json({
         success: false,
         message: 'Reply message is required'
       });
     }
 
-    // Find inquiry
-    const inquiry = await Inquiry.findById(inquiryId);
+    // Find inquiry with timeout
+    console.log('🔧 REPLY API - Finding inquiry in database...');
+    const inquiry = await Promise.race([
+      Inquiry.findById(inquiryId),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('DB query timeout')), 10000)
+      )
+    ]);
     
     if (!inquiry) {
-      console.error('❌ Inquiry not found:', inquiryId);
+      console.error('❌ REPLY API - Inquiry not found:', inquiryId);
       return res.status(404).json({
         success: false,
         message: 'Inquiry not found'
       });
     }
 
-    console.log('🔧 Inquiry found - Email:', inquiry.email);
-    console.log('🔧 Inquiry found - Requirement:', inquiry.requirement);
+    console.log('🔧 REPLY API - Inquiry found, email:', inquiry.email);
 
     // Prepare email content
     const emailSubject = `Re: ${inquiry.requirement || 'Your Inquiry'}`;
@@ -551,10 +564,16 @@ const replyToInquiry = async (req, res) => {
     // Update status to Replied
     inquiry.status = 'Replied';
 
-    // Save inquiry
-    await inquiry.save();
+    // Save inquiry with timeout
+    console.log('🔧 REPLY API - Saving to database...');
+    await Promise.race([
+      inquiry.save(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('DB save timeout')), 10000)
+      )
+    ]);
 
-    console.log('✅ Reply saved to database successfully');
+    console.log('✅ REPLY API - Reply saved to database');
 
     // Send email asynchronously (fire and forget) - don't block response
     console.log('🔧 Starting async email send...');

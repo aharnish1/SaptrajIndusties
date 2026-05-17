@@ -346,14 +346,14 @@ export const inquiriesAPI = {
   },
   reply: async (id, message) => {
     try {
-      console.log('🔧 Frontend API - Sending reply to inquiry:', id);
-      console.log('🔧 Frontend API - Message length:', message?.length);
+      console.log('🔧 Admin API - Sending reply to inquiry:', id);
+      console.log('🔧 Admin API - Message length:', message?.length);
       const response = await API.post(`/inquiries/${id}/reply`, { message });
-      console.log('🔧 Frontend API - Reply response:', response.data);
+      console.log('🔧 Admin API - Reply response:', response.data);
       return response.data;
     } catch (error) {
-      console.error('❌ Frontend API - Reply error:', error);
-      console.error('❌ Frontend API - Error response:', error.response?.data);
+      console.error('❌ Admin API - Reply error:', error);
+      console.error('❌ Admin API - Error response:', error.response?.data);
       throw new Error(error.response?.data?.message || 'Failed to send reply');
     }
   },

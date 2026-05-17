@@ -16,36 +16,42 @@ const sendEmail = async (to, subject, html) => {
 
   if (!emailUser || !emailPass) {
     console.error('❌ Missing EMAIL_USER or EMAIL_PASS in environment variables');
-    return { success: false, error: 'Email configuration missing' };
+    return { success: false, error: 'Email configuration missing', code: 'MISSING_CONFIG' };
   }
 
   try {
-    // Create transporter with timeout protection
+    // Create transporter with EXPLICIT SMTP config (not service: "gmail")
+    console.log('📧 Creating SMTP transporter...');
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // false for port 587 (STARTTLS)
       auth: {
         user: emailUser,
         pass: emailPass
       },
-      connectionTimeout: 10000, // 10 seconds
-      greetingTimeout: 10000,   // 10 seconds
-      socketTimeout: 15000       // 15 seconds
+      tls: {
+        rejectUnauthorized: false // Required for some networks
+      },
+      connectionTimeout: 15000,  // 15 seconds
+      greetingTimeout: 15000,    // 15 seconds
+      socketTimeout: 25000       // 25 seconds
     });
 
-    console.log('📧 Transporter created with timeout config');
+    console.log('📧 Transporter created with SMTP config');
 
-    // Verify transporter with timeout
-    console.log('📧 Verifying transporter...');
+    // Verify transporter with INCREASED timeout for cold starts
+    console.log('📧 Verifying SMTP transporter (15s timeout)...');
     await Promise.race([
       transporter.verify(),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Transporter verify timeout')), 8000)
+        setTimeout(() => reject(new Error('SMTP verify timeout after 15s')), 15000)
       )
     ]);
-    console.log('✅ Transporter verified successfully');
+    console.log('✅ SMTP transporter verified successfully');
 
-    // Send email with timeout
-    console.log('📧 Sending email...');
+    // Send email with INCREASED timeout for cold starts
+    console.log('📧 Sending email (25s timeout)...');
     const info = await Promise.race([
       transporter.sendMail({
         from: `"Saptraj Industries" <${emailUser}>`,
@@ -54,15 +60,17 @@ const sendEmail = async (to, subject, html) => {
         html
       }),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Email send timeout')), 12000)
+        setTimeout(() => reject(new Error('Email send timeout after 25s')), 25000)
       )
     ]);
 
     console.log('✅ Email sent successfully!');
     console.log('📧 Message ID:', info.messageId);
+    console.log('📧 Accepted:', info.accepted);
+    console.log('📧 Rejected:', info.rejected);
     console.log('===========================================');
 
-    return { success: true, messageId: info.messageId };
+    return { success: true, messageId: info.messageId, accepted: info.accepted };
 
   } catch (error) {
     console.error('===========================================');
@@ -70,13 +78,14 @@ const sendEmail = async (to, subject, html) => {
     console.error('❌ Error name:', error.name);
     console.error('❌ Error message:', error.message);
     console.error('❌ Error code:', error.code);
+    console.error('❌ Error response:', error.response);
     console.error('❌ Error stack:', error.stack);
     console.error('===========================================');
 
     return { 
       success: false, 
       error: error.message,
-      code: error.code 
+      code: error.code || 'SMTP_ERROR'
     };
   }
 };

@@ -28,8 +28,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       'https://saptraj-industries.vercel.app',
-      'https://saptraj-industries-v21u.vercel.app',
-      'http://localhost:3000'
+      'https://saptraj-industries-sable.vercel.app',
+      'https://saptraj-industries.vercel.app'
     ].filter(Boolean),
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true

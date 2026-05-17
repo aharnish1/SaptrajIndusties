@@ -575,26 +575,23 @@ const replyToInquiry = async (req, res) => {
 
     console.log('✅ REPLY API - Reply saved to database');
 
-    // Send email asynchronously (fire and forget) - don't block response
-    console.log('🔧 Starting async email send...');
-    
-    sendEmail(inquiry.email, emailSubject, emailHtml)
-      .then(emailResult => {
-        console.log('📧 Async email result:', emailResult);
-        if (emailResult.success) {
-          console.log('✅ Async email sent successfully! MessageId:', emailResult.messageId);
-        } else {
-          console.error('❌ Async email send failed:', emailResult.error);
-        }
-      })
-      .catch(emailError => {
-        console.error('❌ Async email exception:', emailError.message);
-        console.error('❌ Async email stack:', emailError.stack);
-      });
+    // Send email TRULY in background - no waiting, no blocking
+    // Use setTimeout to detach from main event loop
+    console.log('🔧 REPLY API - Scheduling background email...');
+    setTimeout(() => {
+      sendEmail(inquiry.email, emailSubject, emailHtml)
+        .then(emailResult => {
+          console.log('📧 BACKGROUND EMAIL - Result:', emailResult.success ? 'SUCCESS' : 'FAILED', emailResult.messageId || emailResult.error);
+        })
+        .catch(emailError => {
+          console.error('📧 BACKGROUND EMAIL - Exception:', emailError.message);
+        });
+    }, 100);
 
-    console.log('🔧 Returning response to client');
+    console.log('🔧 REPLY API - Returning response to client NOW');
 
-    res.json({
+    // Return immediately - don't wait for email
+    return res.json({
       success: true,
       message: 'Reply sent successfully',
       data: inquiry

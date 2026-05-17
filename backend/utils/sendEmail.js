@@ -33,25 +33,25 @@ const sendEmail = async (to, subject, html) => {
       tls: {
         rejectUnauthorized: false // Required for some networks
       },
-      connectionTimeout: 15000,  // 15 seconds
-      greetingTimeout: 15000,    // 15 seconds
-      socketTimeout: 25000       // 25 seconds
+      connectionTimeout: 30000,  // 30 seconds
+      greetingTimeout: 30000,    // 30 seconds
+      socketTimeout: 60000       // 60 seconds
     });
 
     console.log('📧 Transporter created with SMTP config');
 
-    // Verify transporter with INCREASED timeout for cold starts
-    console.log('📧 Verifying SMTP transporter (15s timeout)...');
+    // Verify transporter with timeout - give plenty of time for cold starts
+    console.log('📧 Verifying SMTP transporter (30s timeout)...');
     await Promise.race([
       transporter.verify(),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('SMTP verify timeout after 15s')), 15000)
+        setTimeout(() => reject(new Error('SMTP verify timeout after 30s')), 30000)
       )
     ]);
     console.log('✅ SMTP transporter verified successfully');
 
-    // Send email with INCREASED timeout for cold starts
-    console.log('📧 Sending email (25s timeout)...');
+    // Send email with timeout - give plenty of time for cold starts
+    console.log('📧 Sending email (60s timeout)...');
     const info = await Promise.race([
       transporter.sendMail({
         from: `"Saptraj Industries" <${emailUser}>`,
@@ -60,7 +60,7 @@ const sendEmail = async (to, subject, html) => {
         html
       }),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Email send timeout after 25s')), 25000)
+        setTimeout(() => reject(new Error('Email send timeout after 60s')), 60000)
       )
     ]);
 

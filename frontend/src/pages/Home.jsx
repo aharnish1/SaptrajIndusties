@@ -7,6 +7,7 @@ import ProcessTimeline from '../components/Home/ProcessTimeline';
 import Button from '../components/UI/Button';
 import { ShieldCheck, Ruler, ArrowRight } from 'lucide-react';
 import infrastructure5 from '../assets/infrastructurePhotoes/infrastructure5.jpeg';
+import MetalDustParticle from '../components/UI/MetalDustParticle';
 
 
 
@@ -72,19 +73,58 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Final CTA */}
+   {/* Final CTA */}
       <section className="py-24 relative border-t border-border-subtle overflow-hidden">
+
+        {/* Background Base */}
         <div className="absolute inset-0 bg-metal-dark z-0">
-           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,122,0,0.08)_0%,transparent_60%)]"></div>
-           <div className="absolute inset-0 industrial-grid opacity-20"></div>
+
+          {/* Cinematic orange radial glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,122,0,0.10)_0%,transparent_65%)]"></div>
+
+          {/* Industrial grid */}
+          <div className="absolute inset-0 industrial-grid opacity-20"></div>
+
+          {/* Dark vignette */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"></div>
+
         </div>
+
+        {/* Metal Dust Particle Layer */}
+        <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden opacity-70">
+
+  {[...Array(window.innerWidth < 768 ? 20 : 45)].map((_, i) => (
+  <MetalDustParticle
+    key={i}
+    x={Math.random() * window.innerWidth}
+    y={Math.random() * 500}
+    delay={Math.random() * 4}
+  />
+))}
+
+</div>
+
+        {/* Floating Ambient Glow */}
+        <div className="absolute left-1/2 top-1/2 z-[2] h-[340px] w-[340px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/10 blur-3xl"></div>
+
+        {/* Content */}
         <div className="container mx-auto px-6 md:px-12 relative z-10 text-center">
-          <h2 className="text-4xl md:text-6xl font-display font-bold text-text-primary mb-8 steel-heading" data-text="Need Precision Fabrication?">Need Precision Fabrication?</h2>
+
+          <h2
+            className="text-4xl md:text-6xl font-display font-bold text-text-primary mb-8 steel-heading tracking-wide drop-shadow-[0_4px_20px_rgba(255,140,0,0.25)]"
+            data-text="Need Precision Fabrication?"
+          >
+            Need Precision Fabrication?
+          </h2>
           <Link to="/quote">
-            <Button variant="primary" className="text-lg px-8 py-4">
+            <Button
+              variant="primary"
+              className="text-lg px-8 py-4 shadow-[0_0_30px_rgba(255,140,0,0.35)] hover:shadow-[0_0_50px_rgba(255,140,0,0.60)] transition-all duration-500 hover:scale-105"
+            >
               Request a Quote Today
             </Button>
           </Link>
+
         </div>
       </section>
     </div>

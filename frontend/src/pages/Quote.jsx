@@ -166,13 +166,13 @@ const Quote = () => {
   return (
     <div className="w-full">
       {/* Hero */}
-      <div className="bg-metal-dark py-20 border-b border-border-subtle industrial-grid">
-        <div className="container mx-auto px-6 md:px-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-text-primary mb-4 steel-heading" data-text="Request a Quote">
+      <div className="bg-metal-dark py-12 sm:py-16 md:py-20 border-b border-border-subtle industrial-grid">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-text-primary mb-3 sm:mb-4 steel-heading" data-text="Request a Quote">
             Request a Quote
           </h1>
 
-          <p className="text-text-muted max-w-2xl mx-auto font-body">
+          <p className="text-text-muted max-w-2xl mx-auto font-body text-sm sm:text-base px-4">
             Provide your requirement details and our engineering team
             will get back to you with a comprehensive proposal.
           </p>
@@ -180,14 +180,14 @@ const Quote = () => {
       </div>
 
       {/* Form */}
-      <section className="py-24 bg-bg-deep industrial-grid">
-        <div className="container mx-auto px-6 md:px-12 max-w-4xl">
-          <div className="card-industrial p-8 rounded-lg relative overflow-hidden">
+      <section className="py-12 sm:py-16 md:py-24 bg-bg-deep industrial-grid">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-4xl">
+          <div className="card-industrial p-6 sm:p-8 rounded-lg sm:rounded-xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent"></div>
 
             <form
               ref={formRef}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
               onSubmit={handleSubmit}
             >
               {/* Contact Info */}
@@ -196,7 +196,7 @@ const Quote = () => {
                   1. Contact Information
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <Input
                     label="Full Name*"
                     id="q_name"
@@ -242,7 +242,7 @@ const Quote = () => {
                   2. Project Specifications
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                   <Input
                     label="Material Type"
                     id="q_material"
@@ -287,23 +287,23 @@ const Quote = () => {
               </div>
 
               {/* Submit */}
-              <div className="pt-4">
+              <div className="pt-2 sm:pt-4">
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                  className={`w-full md:w-auto px-12 py-4 text-lg font-semibold rounded-lg transition-all duration-300
+                  className={`w-full sm:w-auto px-6 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-all duration-300
                   ${
                     isSubmitting
                       ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                      : 'bg-industrial-yellow text-deep-black hover:bg-industrial-yellow/90'
+                      : 'btn-primary-gradient text-deep-black hover:opacity-90'
                   }`}
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center">
                       <Loader2
-                        size={20}
+                        size={18}
                         className="animate-spin mr-2"
                       />
                       Submitting...

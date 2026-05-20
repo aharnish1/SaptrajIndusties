@@ -119,68 +119,87 @@
     text-shadow: none;
   }
   
-  /* Premium Steel Metal Text Effect */
+/* Premium Steel Metal Text Effect */
   .steel-metal-text {
-    background: 
-      linear-gradient(135deg, #8a8a8a 0%, #d4d4d4 20%, #f5f5f5 30%, #a8a8a8 40%, #787878 50%, #a8a8a8 60%, #f5f5f5 70%, #d4d4d4 80%, #8a8a8a 100%),
-      linear-gradient(180deg, #c0c0c0 0%, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%, #c0c0c0 100%);
-    background-size: 200% 200%, 100% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    position: relative;
-    text-shadow: 
-      0 1px 0 rgba(255, 255, 255, 0.3),
-      0 -1px 0 rgba(0, 0, 0, 0.4),
-      0 2px 4px rgba(0, 0, 0, 0.3);
-    animation: steelShine 8s ease-in-out infinite;
-    transition: filter 0.3s ease;
-  }
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+  line-height: 1.12;
+  padding-bottom: 0.08em;
+
+  /* RUST + METAL COMBINED */
+  background-image:
+    radial-gradient(circle at 12% 28%, rgba(140,72,28,0.30) 0%, transparent 10%),
+    radial-gradient(circle at 38% 62%, rgba(181,95,35,0.22) 0%, transparent 24%),
+    radial-gradient(circle at 68% 42%, rgba(95,52,18,0.20) 0%, transparent 13%),
+    radial-gradient(circle at 84% 74%, rgba(166,88,32,0.18) 0%, transparent 31%),
+
+    linear-gradient(
+      to bottom,
+      #f5f5f5 0%,
+      #d8d8d8 20%,
+      #9f9f9f 45%,
+      #f1f1f1 60%,
+      #7d7d7d 80%,
+      #f5f5f5 100%
+    );
+
+  background-blend-mode:
+    overlay,
+    overlay,
+    multiply,
+    overlay,
+    normal;
+
+  background-size: 100% 100%;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  color: transparent;
+}
   
   .steel-metal-text:hover {
-    filter: brightness(1.1) drop-shadow(0 0 20px rgba(255, 122, 0, 0.3));
+    filter: brightness(1.05) contrast(1.03);
   }
   
-  .steel-metal-text::before {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: steelShineSweep 4s ease-in-out infinite;
-    pointer-events: none;
-  }
+  /* Cinematic shine sweep overlay */
+  .steel-metal-text::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255,255,255,0) 35%,
+    rgba(255,255,255,0.75) 50%,
+    rgba(255,255,255,0) 65%,
+    transparent 80%
+  );
+
+  background-size: 200% 100%;
+
+  animation: steelShimmer 3s linear infinite;
+
+  mix-blend-mode: screen;
+
+  pointer-events: none;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+}
   
-  @keyframes steelShine {
-    0%, 100% {
-      background-position: 0% 50%, 0% 0%;
-    }
-    50% {
-      background-position: 100% 50%, 0% 0%;
-    }
+ @keyframes steelShimmer {
+  0% {
+    background-position: -200% 0;
   }
-  
-  @keyframes steelShineSweep {
-    0% {
-      background-position: -200% 0;
-      opacity: 0;
-    }
-    50% {
-      background-position: 200% 0;
-      opacity: 1;
-    }
-    51% {
-      opacity: 0;
-    }
-    100% {
-      background-position: 200% 0;
-      opacity: 0;
-    }
+
+  100% {
+    background-position: 200% 0;
   }
+}
   
   /* Industrial Grid Background */
   .industrial-grid {
@@ -310,5 +329,15 @@
   .section-divider-vertical {
     width: 1px;
     background: linear-gradient(180deg, transparent 0%, rgba(255, 122, 0, 0.3) 50%, transparent 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steel-metal-text {
+    animation: none;
+  }
+  
+  .steel-metal-text::after {
+    animation: none;
   }
 }

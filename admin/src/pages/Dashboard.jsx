@@ -12,8 +12,6 @@ import { dashboardAPI, inquiriesAPI } from '../services/api';
 import AdminLoader from '../components/AdminLoader';
 
 const Dashboard = () => {
-  console.log('Dashboard component rendering');
-
   const navigate = useNavigate();
 
   const [stats, setStats] = useState({
@@ -131,8 +129,9 @@ const Dashboard = () => {
       title: 'Total Products',
       value: stats?.products?.total || 0,
       icon: Package,
-      trend: '+12%',
-      subtitle: 'Active items',
+      trend: stats?.products?.growth || 0,
+      trendPrefix: stats?.products?.growth >= 0 ? '+' : '',
+      subtitle: `${stats?.products?.active || 0} Active`,
       path: '/products',
       clickable: true,
     },
@@ -140,7 +139,8 @@ const Dashboard = () => {
       title: 'Total Projects',
       value: stats?.projects?.total || 0,
       icon: Folders,
-      trend: '+5%',
+      trend: stats?.projects?.growth || 0,
+      trendPrefix: stats?.projects?.growth >= 0 ? '+' : '',
       subtitle: `${stats?.projects?.completed || 0} Completed`,
       path: '/projects',
       clickable: true,
@@ -149,7 +149,8 @@ const Dashboard = () => {
       title: 'Total Inquiries',
       value: stats?.inquiries?.total || 0,
       icon: MessageSquare,
-      trend: '+8%',
+      trend: stats?.inquiries?.growth || 0,
+      trendPrefix: stats?.inquiries?.growth >= 0 ? '+' : '',
       subtitle: `${stats?.inquiries?.new || 0} New`,
       path: '/inquiries',
       clickable: true,
@@ -158,7 +159,8 @@ const Dashboard = () => {
       title: 'This Month',
       value: stats?.inquiries?.thisMonth || 0,
       icon: TrendingUp,
-      trend: '+15%',
+      trend: stats?.inquiries?.growth || 0,
+      trendPrefix: stats?.inquiries?.growth >= 0 ? '+' : '',
       subtitle: 'New inquiries',
       path: '/inquiries',
       clickable: true,
@@ -205,7 +207,7 @@ const Dashboard = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-heading font-bold text-white">
+            <h1 className="text-3xl font-bold steel-heading" data-text="Dashboard Overview">
               Dashboard Overview
             </h1>
 
@@ -266,9 +268,9 @@ const Dashboard = () => {
                   {stat.subtitle}
                 </p>
 
-                <div className="flex items-center gap-2 text-sm text-green-500">
+                <div className={`flex items-center gap-2 text-sm ${stat.trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                   <TrendingUp size={16} />
-                  <span>{stat.trend} from last month</span>
+                  <span>{stat.trendPrefix}{stat.trend}% from last month</span>
                 </div>
               </div>
             </div>
@@ -277,7 +279,7 @@ const Dashboard = () => {
 
         {/* Recent Inquiries */}
         <div className="bg-[#0A0A0A] rounded-lg border border-gunmetal-gray p-6">
-          <h2 className="text-xl font-heading font-bold text-white mb-6 border-b border-[#333] pb-4">
+          <h2 className="text-xl font-bold steel-heading-sm" data-text="Recent Inquiries">
             Recent Inquiries
           </h2>
 

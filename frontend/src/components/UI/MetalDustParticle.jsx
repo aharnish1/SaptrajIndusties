@@ -23,7 +23,7 @@ const MetalDustParticle = ({ x, y, delay = 0 }) => {
       [posY, y, 0],
       [posY, y + driftY, 4],
     ], {
-      duration: 4,
+      duration: Math.random() * 3 + 4,
       delay,
       ease: [0.25, 0.1, 0.25, 1]
     });
@@ -44,7 +44,7 @@ const MetalDustParticle = ({ x, y, delay = 0 }) => {
   }, []);
   
   const particleSize = React.useMemo(() => {
-    return Math.random() * 2 + 1;
+    return Math.random() * 5 + 2;
   }, []);
   
   return (
@@ -59,7 +59,8 @@ const MetalDustParticle = ({ x, y, delay = 0 }) => {
         background: particleColor,
         opacity,
         scale,
-        filter: 'blur(0.5px)',
+        filter: 'blur(1px)',
+boxShadow: '0 0 8px rgba(255,122,0,0.15)',
         pointerEvents: 'none',
         willChange: 'opacity, scale, transform',
       }}

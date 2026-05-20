@@ -1,12 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FileText, Shield, Users, Hammer } from 'lucide-react';
+import { getLegalEmailWithFallback } from '../services/api';
+
+const DEFAULT_LEGAL_EMAIL = 'aharnishparekar7@gmail.com';
 
 const TermsOfService = () => {
+  const [legalEmail, setLegalEmail] = useState(DEFAULT_LEGAL_EMAIL);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLegalEmail = async () => {
+      try {
+        const email = await getLegalEmailWithFallback();
+        setLegalEmail(email);
+      } catch (error) {
+        console.warn('Failed to fetch legal email, using default:', error);
+        setLegalEmail(DEFAULT_LEGAL_EMAIL);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLegalEmail();
+  }, []);
+
+  const handleEmailLegalClick = () => {
+    const email = legalEmail || DEFAULT_LEGAL_EMAIL;
+    const subject = encodeURIComponent('Legal Department Inquiry');
+    const body = encodeURIComponent(
+      'Hello Saptraj Industries Legal Team,\n\n' +
+      'I have a question regarding your Terms & Conditions.\n\n' +
+      'Please assist me with the following:\n\n\n\n' +
+      'Regards,\n'
+    );
+    window.open(
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&subject=${subject}&body=${body}`,
+      '_blank'
+    );
+  };
+
   return (
     <div className="min-h-screen bg-deep-black text-metallic-silver">
-      {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,212,0,0.1)_0%,transparent_60%)]"></div>
         <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -26,12 +62,9 @@ const TermsOfService = () => {
         </div>
       </section>
 
-      {/* Content Section */}
       <section className="py-16">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            
-            {/* Service Terms */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -52,7 +85,6 @@ const TermsOfService = () => {
               </ul>
             </motion.div>
 
-            {/* Manufacturing Terms */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -74,12 +106,11 @@ const TermsOfService = () => {
             </motion.div>
           </div>
 
-          {/* Payment Terms */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-8"
+            className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-8 mt-12"
           >
             <div className="flex items-center gap-4 mb-6">
               <Shield className="text-industrial-yellow" size={24} />
@@ -95,12 +126,11 @@ const TermsOfService = () => {
             </ul>
           </motion.div>
 
-          {/* Intellectual Property */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-8 lg:col-span-2"
+            className="bg-[#0A0A0A] border border-gunmetal-gray rounded-lg p-8 mt-12 lg:col-span-2"
           >
             <div className="flex items-center gap-4 mb-6">
               <Users className="text-industrial-yellow" size={24} />
@@ -128,7 +158,6 @@ const TermsOfService = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
       <section className="py-16 bg-[#0A0A0A] border-t border-gunmetal-gray">
         <div className="container mx-auto px-6 md:px-12 text-center">
           <h2 className="text-3xl font-bold text-white mb-8">Questions About Terms?</h2>
@@ -136,9 +165,18 @@ const TermsOfService = () => {
             <Link to="/contact" className="px-8 py-4 bg-industrial-yellow text-deep-black font-bold rounded hover:bg-white transition-colors">
               Contact Legal Team
             </Link>
-            <Link to="mailto:saptarajindustries@gmail.com" className="px-8 py-4 border border-industrial-yellow text-industrial-yellow font-bold rounded hover:bg-industrial-yellow hover:text-deep-black transition-colors">
-              Email Legal Department
-            </Link>
+            {loading ? (
+              <span className="px-8 py-4 border border-industrial-yellow text-industrial-yellow font-bold rounded opacity-50 cursor-wait">
+                Loading...
+              </span>
+            ) : (
+              <button
+                onClick={handleEmailLegalClick}
+                className="px-8 py-4 border border-industrial-yellow text-industrial-yellow font-bold rounded hover:bg-industrial-yellow hover:text-deep-black transition-colors"
+              >
+                Email Legal Department
+              </button>
+            )}
           </div>
         </div>
       </section>

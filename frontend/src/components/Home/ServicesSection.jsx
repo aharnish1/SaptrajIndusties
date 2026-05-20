@@ -65,35 +65,35 @@ const services = [
 
 const ServicesSection = () => {
   return (
-    <section className="py-24 bg-bg-deep relative overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-bg-deep relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,122,0,0.08)_0%,transparent_70%)]" />
         <div className="absolute inset-0 industrial-grid opacity-30" />
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="text-center mb-20">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-sm md:text-base tracking-[3px] uppercase text-accent-primary mb-4 font-body">
+            <h3 className="text-xs sm:text-sm tracking-[2px] sm:tracking-[3px] uppercase text-accent-primary mb-3 sm:mb-4 font-body">
               CAPABILITIES
             </h3>
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary mb-6 steel-heading" data-text="Manufacturing Services">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-text-primary mb-4 sm:mb-6 steel-heading" data-text="Manufacturing Services">
               Manufacturing Services
             </h2>
-            <p className="text-text-muted text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-body">
+            <p className="text-text-muted text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed font-body px-4">
               Advanced metal fabrication solutions with precision engineering, 
               cutting-edge technology, and uncompromising quality standards.
             </p>
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {services.map((service, index) => (
             <ServiceCard key={service.id} service={service} index={index} />
           ))}

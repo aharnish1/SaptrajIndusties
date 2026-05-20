@@ -298,32 +298,6 @@ const Certifications = () => {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-24 border-t border-[#333] bg-gunmetal-gray">
-        <div className="container mx-auto px-6 md:px-12 text-center">
-          <div className="flex items-center justify-center mb-6">
-            <Star size={32} className="text-industrial-yellow" />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6">
-            Partner with a Certified Manufacturer
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-8">
-            Work with a company that meets international quality standards and delivers precision manufacturing solutions you can trust.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="primary" className="text-lg px-8 py-4">
-              Request Quality Audit Report
-            </Button>
-            <Button variant="secondary">
-                <a
-                  href="../assets/certificates/Certificate.pdf"
-                  download
-                >Download Certification PDF</a>
-            </Button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

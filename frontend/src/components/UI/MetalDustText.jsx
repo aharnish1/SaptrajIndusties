@@ -10,34 +10,34 @@ const MetalDustText = ({ children, className = '' }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const COLORS = {
-    silver: 'rgba(192, 192, 192, ',
-    gunmetal: 'rgba(100, 105, 115, ',
-    darkGray: 'rgba(80, 85, 90, ',
-    softWhite: 'rgba(220, 225, 230, ',
+    ember: 'rgba(255, 140, 0, ',
+    emberLight: 'rgba(255, 170, 40, ',
+    emberDark: 'rgba(255, 120, 0, ',
+    emberWarm: 'rgba(255, 155, 60, ',
     amber: 'rgba(255, 180, 100, ',
     orange: 'rgba(255, 140, 50, ',
   };
 
   const createParticle = useCallback((canvas) => {
-    const isSpark = Math.random() > 0.92;
-    const isAmbient = Math.random() > 0.7;
+    const isSpark = Math.random() > 0.88;
+    const isAmbient = Math.random() > 0.65;
     
     return {
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       size: isSpark 
-        ? Math.random() * 1.5 + 0.5 
-        : Math.random() * 2.5 + 0.5,
-      speedX: (Math.random() - 0.5) * (isAmbient ? 0.15 : 0.3),
-      speedY: (Math.random() - 0.5) * (isAmbient ? 0.1 : 0.2) - 0.05,
-      opacity: Math.random() * 0.4 + 0.1,
+        ? Math.random() * 2 + 0.8 
+        : Math.random() * 3 + 1,
+      speedX: (Math.random() - 0.5) * (isAmbient ? 0.18 : 0.4),
+      speedY: (Math.random() - 0.5) * (isAmbient ? 0.12 : 0.25) - 0.05,
+      opacity: Math.random() * 0.5 + 0.2,
       fadeIn: true,
       fadeOut: false,
-      fadeSpeed: 0.002 + Math.random() * 0.003,
+      fadeSpeed: 0.003 + Math.random() * 0.004,
       color: isSpark 
-        ? COLORS.amber + (Math.random() * 0.3 + 0.2) + ')'
-        : COLORS.silver + (Math.random() * 0.3 + 0.1) + ')',
-      blur: Math.random() > 0.6 ? 'blur(0.5px)' : 'none',
+        ? COLORS.ember + (Math.random() * 0.2 + 0.7) + ')'
+        : COLORS.emberWarm + (Math.random() * 0.25 + 0.5) + ')',
+      blur: Math.random() > 0.5 ? 'blur(0.4px)' : 'none',
       isSpark,
     };
   }, [COLORS]);
@@ -115,17 +115,17 @@ const MetalDustText = ({ children, className = '' }) => {
     updateCanvasSize();
     window.addEventListener('resize', updateCanvasSize);
 
-    const particleCount = isHovered ? 60 : 40;
+    const particleCount = isHovered ? 80 : 50;
     for (let i = 0; i < particleCount; i++) {
       const particle = createParticle(canvas);
-      particle.opacity = Math.random() * 0.3;
+      particle.opacity = Math.random() * 0.45 + 0.15;
       particlesRef.current.push(particle);
     }
 
     const animate = () => {
       ctx.clearRect(0, 0, rect.width, rect.height);
       
-      const targetCount = isHovered ? 60 : 40;
+      const targetCount = isHovered ? 80 : 50;
       
       while (particlesRef.current.length < targetCount && Math.random() > 0.95) {
         particlesRef.current.push(createParticle(canvas));
@@ -187,8 +187,9 @@ const MetalDustText = ({ children, className = '' }) => {
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none"
         style={{ 
-          opacity: isHovered ? 1 : 0.7,
+          opacity: isHovered ? 0.3 : 0.04,
           transition: 'opacity 0.4s ease',
+          zIndex: 0,
         }}
       />
       {children}
@@ -199,6 +200,7 @@ const MetalDustText = ({ children, className = '' }) => {
           background: isHovered
             ? 'radial-gradient(ellipse at 50% 50%, rgba(180, 185, 195, 0.12) 0%, transparent 70%)'
             : 'transparent',
+          zIndex: 0,
         }}
         animate={{
           opacity: isHovered ? 1 : 0,

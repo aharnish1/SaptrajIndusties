@@ -433,6 +433,48 @@ export const jobsAPI = {
 };
 
 // ============================================
+// SETTINGS API
+// ============================================
+
+export const settingsAPI = {
+  getSettings: async () => {
+    try {
+      const response = await API.get('/settings', {
+        baseURL: import.meta.env.VITE_BACKEND_URL || ''
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      throw new Error(error.response?.data?.message || 'Failed to fetch settings');
+    }
+  },
+
+  getLegalEmail: async () => {
+    try {
+      const response = await API.get('/settings/legal-email', {
+        baseURL: import.meta.env.VITE_BACKEND_URL || ''
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching legal email:', error);
+      throw new Error(error.response?.data?.message || 'Failed to fetch legal email');
+    }
+  }
+};
+
+const DEFAULT_FALLBACK_EMAIL = 'aharnishparekar7@gmail.com';
+
+export const getLegalEmailWithFallback = async () => {
+  try {
+    const response = await settingsAPI.getLegalEmail();
+    return response.data?.data?.legalDepartmentEmail || DEFAULT_FALLBACK_EMAIL;
+  } catch (error) {
+    console.warn('Failed to fetch legal email from API, using fallback:', error);
+    return DEFAULT_FALLBACK_EMAIL;
+  }
+};
+
+// ============================================
 // HEALTH CHECK
 // ============================================
 

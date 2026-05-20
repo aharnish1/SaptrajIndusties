@@ -525,7 +525,7 @@ const Inquiries = () => {
 
       <div className="admin-page-header">
         <div className="min-w-0">
-          <h1 className="admin-page-title">Inquiries</h1>
+          <h1 className="admin-page-title steel-heading">Inquiries</h1>
           <p className="admin-page-subtitle">Manage customer inquiries.</p>
         </div>
       </div>

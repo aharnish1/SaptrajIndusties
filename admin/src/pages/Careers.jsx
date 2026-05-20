@@ -241,7 +241,7 @@ const Careers = () => {
     <div className="admin-page space-y-6">
       <div className="admin-page-header">
         <div className="min-w-0">
-          <h1 className="admin-page-title">Careers Management</h1>
+          <h1 className="admin-page-title steel-heading">Careers Management</h1>
           <p className="admin-page-subtitle">Manage job postings and applications</p>
         </div>
         <button

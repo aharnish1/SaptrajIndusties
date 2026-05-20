@@ -1494,12 +1494,16 @@ const ServiceDetail = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Link to="/quote">
               <Button variant="primary" className="px-8 py-4">
                 Request Quote
               </Button>
+              </Link>
+              <Link to="/contact-us">
               <Button variant="outline" className="px-8 py-4">
                 Contact Expert
               </Button>
+              </Link>
             </div>
           </motion.div>
         </div>

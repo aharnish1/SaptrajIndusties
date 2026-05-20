@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import aboutBg from "../../assets/aboutBg.jpeg";
 import Button from '../UI/Button';
+import { Link } from 'react-router-dom';
 
 const ServiceHero3D = ({ service }) => {
   return (
@@ -104,7 +105,7 @@ const ServiceHero3D = ({ service }) => {
                 transition={{ delay: 0.7 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               >
-
+              <Link to="/quote">
                 <Button
                   variant="primary"
                   className="px-8 py-4 group"
@@ -114,7 +115,8 @@ const ServiceHero3D = ({ service }) => {
                     <ArrowRight size={18} />
                   </span>
                 </Button>
-
+                </Link>
+                <Link to="/contact-us">
                 <Button
                   variant="outline"
                   className="px-8 py-4 group"
@@ -124,6 +126,7 @@ const ServiceHero3D = ({ service }) => {
                     <ArrowRight size={18} />
                   </span>
                 </Button>
+                </Link>
 
               </motion.div>
 

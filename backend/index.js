@@ -40,7 +40,11 @@ const io = new Server(server, {
 app.set('io', io);
 
 const notificationService = require('./services/notificationService');
+const { initializeSettings } = require('./controllers/settingsController');
 notificationService.setIO(io);
+
+// Initialize default settings
+initializeSettings().catch(err => console.error('Failed to initialize settings:', err));
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
@@ -88,7 +92,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api', apiRoutes);
 app.use('/settings', settingsRoutes);
-app.use('/stats', statsRoutes);
+app.use('/api/stats', statsRoutes);
 app.use('/api/quote/upload', uploadRoutes);
 
 // Root route

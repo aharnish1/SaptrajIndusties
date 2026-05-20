@@ -399,45 +399,14 @@ export const contactAPI = {
 export const dashboardAPI = {
   getStats: async () => {
     try {
-      // Use Promise.allSettled to prevent total failure if one API fails
-      const [inquiriesResult, projectsResult, productsResult] = await Promise.allSettled([
-        inquiriesAPI.getStats(),
-        projectsAPI.getStats(),
-        productsAPI.getAll(),
-      ]);
-      
-      // Safely extract data with fallbacks
-      const inquiriesStats = inquiriesResult.status === 'fulfilled' ? inquiriesResult.value.data : {
-        total: 0,
-        new: 0,
-        thisMonth: 0
-      };
-      
-      const projectsStats = projectsResult.status === 'fulfilled' ? projectsResult.value.data : {
-        total: 0,
-        completed: 0,
-        inProgress: 0
-      };
-      
-      const productsData = productsResult.status === 'fulfilled' && Array.isArray(productsResult.value.data) 
-        ? productsResult.value.data 
-        : [];
-      
-      return {
-        inquiries: inquiriesStats,
-        projects: projectsStats,
-        products: {
-          total: productsData.length,
-          active: productsData.filter(p => p.status === 'Active').length,
-        },
-      };
+      const response = await API.get('/stats/dashboard');
+      return response.data;
     } catch (error) {
       console.error('Dashboard API error:', error);
-      // Return safe fallback data
       return {
-        inquiries: { total: 0, new: 0, thisMonth: 0 },
-        projects: { total: 0, completed: 0, inProgress: 0 },
-        products: { total: 0, active: 0 },
+        products: { total: 0, active: 0, growth: 0 },
+        projects: { total: 0, completed: 0, inProgress: 0, growth: 0 },
+        inquiries: { total: 0, new: 0, growth: 0 },
       };
     }
   },

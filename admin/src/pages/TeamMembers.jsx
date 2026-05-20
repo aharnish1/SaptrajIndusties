@@ -159,7 +159,7 @@ const TeamMembers = () => {
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-white">
+          <h1 className="text-3xl font-bold steel-heading" data-text="Team Members">
             Team Members
           </h1>
 

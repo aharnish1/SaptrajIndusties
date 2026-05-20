@@ -301,7 +301,7 @@ const Products = () => {
 
         <div>
 
-          <h1 className="text-3xl font-heading font-bold text-white">
+          <h1 className="text-3xl font-bold steel-heading" data-text="Products Management">
             Products Management
           </h1>
 

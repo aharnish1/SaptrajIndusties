@@ -1,6 +1,6 @@
 import React from 'react';
 import aboutBg from "../assets/aboutBg.jpeg";
-import aboutVideo from "../assets/aboutVideo.mp4"; // IMPORT VIDEO
+import VIDEO from "../assets/VIDEO BG.mp4"; // IMPORT VIDEO
 
 const About = () => {
   return (
@@ -61,7 +61,7 @@ const About = () => {
               controls
               muted
             >
-              <source src={aboutVideo} type="video/mp4" />
+              <source src={VIDEO} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Button from '../UI/Button';
 import MetalDustText from '../UI/MetalDustText';
 import { ArrowRight } from 'lucide-react';
-import aboutVideo from '../../assets/aboutVideo.mp4';
+import BG from '../../assets/BG.mp4';
 
 const HeroSection = () => {
   return (
@@ -19,7 +19,7 @@ const HeroSection = () => {
           playsInline
           preload="auto"
         >
-          <source src={aboutVideo} type="video/mp4" />
+          <source src={BG} type="video/mp4" />
         </video>
         
         {/* Dark Overlay Layer */}

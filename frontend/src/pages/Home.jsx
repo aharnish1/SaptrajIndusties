@@ -6,7 +6,11 @@ import ServicesSection from '../components/Home/ServicesSection';
 import ProcessTimeline from '../components/Home/ProcessTimeline';
 import Button from '../components/UI/Button';
 import { ShieldCheck, Ruler, ArrowRight } from 'lucide-react';
+<<<<<<< HEAD
 import infrastructure5 from '../assets/infrastructurePhotoes/infrastructure5.jpeg';
+=======
+import Whole from '../assets/infrastructurePhotoes/Whole1.jpeg';
+>>>>>>> 8c47847 (Update website content)
 import MetalDustParticle from '../components/UI/MetalDustParticle';
 
 
@@ -45,7 +49,7 @@ const Home = () => {
               <div className="aspect-video bg-metal-dark border border-border-subtle rounded-lg flex items-center justify-center relative overflow-hidden group box-glow-hover">
                 <div className="absolute inset-0 bg-accent-primary opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 
-                <img src={infrastructure5} alt="Infrastructure" className="w-full h-full object-cover" />
+                <img src={Whole} alt="Infrastructure" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>

@@ -1,47 +1,286 @@
 import React from 'react';
 import InfrastructureCarousel from '../components/InfrastructureCarousel';
 import TeamSection from '../components/TeamSection';
-import infrastructure1 from '../assets/infrastructurePhotoes/infrastructure1.jpeg';
-import infrastructure2 from '../assets/infrastructurePhotoes/infrastructure2.jpeg';
-import infrastructure3 from '../assets/infrastructurePhotoes/infrastructure3.jpeg';
-import infrastructure4 from '../assets/infrastructurePhotoes/infrastructure4.jpeg';
-import infrastructure5 from '../assets/infrastructurePhotoes/infrastructure5.jpeg';
+import laserCutting1 from '../assets/infrastructurePhotoes/laserCutting1.jpeg';
+import laserCutting2 from '../assets/infrastructurePhotoes/laserCutting2.jpeg';
+import laserCutting3 from '../assets/infrastructurePhotoes/laserCutting3.jpeg';
+import laserCutting4 from '../assets/infrastructurePhotoes/laserCutting4.jpeg';
+import laserCutting5 from '../assets/infrastructurePhotoes/laserCutting5.jpeg';
+import laserCutting6 from '../assets/infrastructurePhotoes/laserCutting6.jpeg';
+import CNCBending1 from '../assets/infrastructurePhotoes/CNCBending1.jpeg';
+import CNCBending2 from '../assets/infrastructurePhotoes/CNCBending2.jpeg';
+import Assembly1 from '../assets/infrastructurePhotoes/Assembly1.jpeg';
+import Assembly2 from '../assets/infrastructurePhotoes/Assembly2.jpeg';
+import CompleteWork1 from '../assets/infrastructurePhotoes/CompleteWork1.jpeg';
+import CompleteWork2 from '../assets/infrastructurePhotoes/CompleteWork2.jpeg';
+import CompleteWork3 from '../assets/infrastructurePhotoes/CompleteWork3.jpeg';
+import CompleteWork4 from '../assets/infrastructurePhotoes/CompleteWork4.jpeg';
+import Compressor1 from '../assets/infrastructurePhotoes/Compressor1.jpeg';
+import DeliveryArea1 from '../assets/infrastructurePhotoes/DeliveryArea1.jpeg';
+import DeliveryArea2 from '../assets/infrastructurePhotoes/DeliveryArea2.jpeg';
+import Fire1 from '../assets/infrastructurePhotoes/Fire1.jpeg';
+import Office1 from '../assets/infrastructurePhotoes/Office1.jpeg';
+import Outside1 from '../assets/infrastructurePhotoes/Outside1.jpeg';
+import Outside2 from '../assets/infrastructurePhotoes/Outside2.jpeg';
+import Outside3 from '../assets/infrastructurePhotoes/Outside3.jpeg';
+import Outside4 from '../assets/infrastructurePhotoes/Outside4.jpeg';
+import Outside5 from '../assets/infrastructurePhotoes/Outside5.jpeg';
+import Painting1 from '../assets/infrastructurePhotoes/Painting1.jpeg';
+import Painting2 from '../assets/infrastructurePhotoes/Painting2.jpeg';
+import Painting3 from '../assets/infrastructurePhotoes/Painting3.jpeg';
+import Raw1 from '../assets/infrastructurePhotoes/Raw1.jpeg';
+import Raw2 from '../assets/infrastructurePhotoes/Raw2.jpeg';
+import SandBlasting1 from '../assets/infrastructurePhotoes/SandBlasting1.jpeg';
+import SandBlasting2 from '../assets/infrastructurePhotoes/SandBlasting2.jpeg';
+import SandBlasting3 from '../assets/infrastructurePhotoes/SandBlasting3.jpeg';
+import Scrap1 from '../assets/infrastructurePhotoes/Scrap1.jpeg';
+import Scrap2 from '../assets/infrastructurePhotoes/Scrap2.jpeg';
 import myphoto from '../assets/MyPhoto.png';
 import aboutBg from "../assets/aboutBg.jpeg";
 
 const Infrastructure = () => {
-  // Infrastructure images data
+  // Infrastructure images data  
   const infrastructureSlides = [
-    {
-      id: 1,
-      image: infrastructure1,
-      title: 'Laser Cutting Workshop',
-      description: 'State-of-the-art fiber laser cutting systems with precision CNC control'
-    },
-    {
-      id: 2,
-      image: infrastructure2,
-      title: 'CNC Bending Area',
-      description: 'Advanced CNC bending machines for precise metal fabrication'
-    },
-    {
-      id: 3,
-      image: infrastructure3,
-      title: 'Welding Station',
-      description: 'Professional MIG and TIG welding capabilities for various materials'
-    },
-    {
-      id: 4,
-      image: infrastructure4,
-      title: 'Assembly Line',
-      description: 'Dedicated assembly area for project completion'
-    },
-    {
-      id: 5,
-      image: infrastructure5,
-      title: 'Quality Control',
-      description: 'Rigorous quality inspection and testing facilities'
-    }
+  {
+    id: 1,
+    image: Office1,
+    title: "Factory Administration Office",
+    description: "Administrative office managing operations, planning, procurement, and customer coordination."
+  },
+
+  {
+    id: 2,
+    image: Outside1,
+    title: "Manufacturing Facility Exterior",
+    description: "Main production facility equipped for heavy fabrication and industrial manufacturing."
+  },
+
+  {
+    id: 3,
+    image: Outside2,
+    title: "Saptraj Industries LLP",
+    description: "Official company identification displaying manufacturing capabilities and facility information."
+  },
+
+  {
+    id: 4,
+    image: Outside3,
+    title: "Production Facility View",
+    description: "External view of the manufacturing unit with dedicated loading and operational areas."
+  },
+
+  {
+    id: 5,
+    image: Outside4,
+    title: "Factory Warehouse Entrance",
+    description: "Material handling and dispatch area designed for efficient logistics operations."
+  },
+
+  {
+    id: 6,
+    image: Outside5,
+    title: "Industrial Premises",
+    description: "Comprehensive view of the factory premises and infrastructure."
+  },
+
+  {
+    id: 7,
+    image: Painting1,
+    title: "Industrial Painting Process",
+    description: "Protective coating application on fabricated structures for enhanced durability."
+  },
+
+  {
+    id: 8,
+    image: Painting2,
+    title: "Fabricated Structural Assemblies",
+    description: "Structural components prepared for painting and final finishing operations."
+  },
+
+  {
+    id: 9,
+    image: Painting3,
+    title: "Finished Painted Structures",
+    description: "Completed fabricated structures with industrial-grade protective coating."
+  },
+
+  {
+    id: 10,
+    image: Raw1,
+    title: "MS Plate Inventory",
+    description: "High-quality mild steel plates stocked for precision manufacturing requirements."
+  },
+
+  {
+    id: 11,
+    image: Raw2,
+    title: "Laser Cut Components",
+    description: "Precision laser-cut sheet metal parts ready for fabrication and assembly."
+  },
+
+  {
+    id: 12,
+    image: SandBlasting1,
+    title: "Sand Blasting Booth",
+    description: "Dedicated surface preparation facility for cleaning and finishing metal components."
+  },
+
+  {
+    id: 13,
+    image: SandBlasting2,
+    title: "Surface Treatment Facility",
+    description: "Controlled blasting environment ensuring superior surface quality before coating."
+  },
+
+  {
+    id: 14,
+    image: SandBlasting3,
+    title: "Blasting Media",
+    description: "Industrial abrasive material used for effective rust and scale removal."
+  },
+
+  {
+    id: 15,
+    image: Assembly1,
+    title: "Heavy Fabrication Shop",
+    description: "Large-scale fabrication area supporting structural and sheet metal manufacturing."
+  },
+
+  {
+    id: 16,
+    image: Assembly2,
+    title: "Production Assembly Area",
+    description: "Dedicated workspace for fabrication, assembly, and material processing operations."
+  },
+
+ 
+  {
+    id: 17,
+    image: Scrap1,
+    title: "Industrial Scrap Collection",
+    description: "Organized collection and segregation of recyclable fabrication scrap."
+  },
+
+  {
+    id: 18,
+    image: Scrap2,
+    title: "Metal Waste Management",
+    description: "Efficient scrap handling process supporting sustainable manufacturing practices."
+  },
+
+  {
+  id: 19,
+  image: laserCutting1,
+  title: "Fiber Laser Cutting Machine",
+  description: "High-precision CNC fiber laser cutting system for accurate sheet metal processing."
+},
+
+{
+  id: 20,
+  image: laserCutting2,
+  title: "Laser Cutting Operations",
+  description: "Advanced laser cutting facility delivering precision and consistency in every component."
+},
+
+{
+  id: 21,
+  image: laserCutting3,
+  title: "Automated Laser Processing",
+  description: "Modern CNC-controlled laser cutting equipment for complex fabrication requirements."
+},
+
+{
+  id: 22,
+  image: laserCutting4,
+  title: "Sheet Metal Laser Cutting",
+  description: "Efficient processing of mild steel, stainless steel, and custom sheet metal components."
+},
+
+{
+  id: 23,
+  image: laserCutting5,
+  title: "Precision Cutting Facility",
+  description: "State-of-the-art laser cutting technology ensuring superior dimensional accuracy."
+},
+
+{
+  id: 24,
+  image: laserCutting6,
+  title: "Production Laser Cell",
+  description: "Dedicated laser cutting area supporting high-volume manufacturing operations."
+},
+
+{
+  id: 25,
+  image: CNCBending1,
+  title: "CNC Press Brake Machine",
+  description: "Advanced CNC bending system for precise sheet metal forming and fabrication."
+},
+
+{
+  id: 26,
+  image: CNCBending2,
+  title: "Precision Bending Operations",
+  description: "High-accuracy bending facility capable of producing complex formed components."
+},
+
+{
+  id: 27,
+  image: Fire1,
+  title: "Fire Safety Infrastructure",
+  description: "Dedicated fire protection and emergency response equipment ensuring workplace safety."
+},
+
+{
+  id: 28,
+  image: CompleteWork1,
+  title: "Finished Fabricated Structure",
+  description: "Completed structural fabrication ready for inspection, coating, and dispatch."
+},
+
+{
+  id: 29,
+  image: CompleteWork2,
+  title: "Custom Fabricated Assembly",
+  description: "Precision-engineered fabricated assembly manufactured to customer specifications."
+},
+
+{
+  id: 30,
+  image: CompleteWork3,
+  title: "Industrial Fabrication Project",
+  description: "High-quality fabricated component designed for industrial applications."
+},
+
+{
+  id: 31,
+  image: CompleteWork4,
+  title: "Completed Engineering Product",
+  description: "Finished engineering product showcasing fabrication and assembly expertise."
+},
+
+{
+  id: 32,
+  image: Compressor1,
+  title: "Industrial Air Compressor",
+  description: "Compressed air system supporting laser cutting, fabrication, painting, and shop-floor operations."
+},
+
+{
+  id: 33,
+  image: DeliveryArea1,
+  title: "Dispatch & Loading Area",
+  description: "Dedicated loading zone ensuring safe handling and timely product delivery."
+},
+
+{
+  id: 34,
+  image: DeliveryArea2,
+  title: "Material Dispatch Facility",
+  description: "Organized dispatch area for efficient movement of finished products and materials."
+}
+
+
   ];
 
   // Team members data

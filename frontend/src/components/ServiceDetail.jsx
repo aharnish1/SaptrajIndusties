@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Award, 
-  Clock, 
-  Users, 
-  Target, 
-  CheckCircle, 
+import {
+  ArrowLeft,
+  Award,
+  Clock,
+  Users,
+  Target,
+  CheckCircle,
   Star,
   Download,
   Phone,
@@ -26,10 +26,20 @@ import {
   Hammer,
   Sparkles,
   Paintbrush,
-BrushCleaning
+  BrushCleaning
 } from 'lucide-react';
 import Button from './UI/Button';
 import ServiceHero3D from './services/ServiceHero3D';
+import laserCutting3 from '../assets/infrastructurePhotoes/laserCutting3.jpeg';
+import CNCBending1 from '../assets/infrastructurePhotoes/CNCBending1.jpeg';
+import Assembly1 from '../assets/infrastructurePhotoes/Assembly1.jpeg';
+import CompleteWork1 from '../assets/infrastructurePhotoes/CompleteWork1.jpeg';
+import Painting1 from '../assets/infrastructurePhotoes/Painting1.jpeg';
+import Raw1 from '../assets/infrastructurePhotoes/Raw1.jpeg';
+import Raw2 from '../assets/infrastructurePhotoes/Raw2.jpeg';
+import SandBlasting1 from '../assets/infrastructurePhotoes/SandBlasting1.jpeg';
+import Scrap1 from '../assets/infrastructurePhotoes/Scrap1.jpeg';
+import Welding from '../assets/infrastructurePhotoes/Welding.png';
 
 // Service data with comprehensive information
 const serviceData = {
@@ -39,7 +49,7 @@ const serviceData = {
     subtitle: 'Advanced Precision Cutting Technology',
     tagline: 'Precision Cutting Technology',
     description: 'Advanced CNC laser cutting services delivering unparalleled precision and speed for complex metal fabrication projects.',
-    heroImage: '/images/services/laser-cutting-hero.jpg',
+    heroImage: laserCutting3,
     model: '/models/cnc-laser-machine.glb',
     features: [
       '±0.1mm precision accuracy',
@@ -157,7 +167,7 @@ const serviceData = {
     subtitle: 'Precision Metal Forming Technology',
     tagline: 'Precision Metal Forming',
     description: 'Advanced CNC bending services ensuring perfect angles and tight tolerances for sheet metal fabrication.',
-    heroImage: '/images/services/cnc-bending-hero.jpg',
+    heroImage: CNCBending1,
     model: '/models/cnc-bending-machine.glb',
     features: [
       '±0.5° angle accuracy',
@@ -275,7 +285,7 @@ const serviceData = {
     subtitle: 'Professional Welding Technology',
     tagline: 'Professional Welding Solutions',
     description: 'Expert MIG and arc welding services by certified professionals for high-strength industrial assemblies.',
-    heroImage: '/images/services/welding-hero.jpg',
+    heroImage: Welding,
     model: '/models/welding-machine.glb',
     features: [
       'AWS D1.1 certified',
@@ -393,7 +403,7 @@ const serviceData = {
     subtitle: 'Heavy-Duty Steel Technology',
     tagline: 'Heavy-Duty Steel Solutions',
     description: 'Comprehensive structural steel fabrication for large-scale industrial projects with precision engineering.',
-    heroImage: '/images/services/structural-hero.jpg',
+    heroImage: CompleteWork1,
     model: '/models/fabrication-machine.glb',
     features: [
       '150mm material thickness',
@@ -511,7 +521,7 @@ const serviceData = {
     subtitle: 'Comprehensive Metal Technology',
     tagline: 'Comprehensive Metal Solutions',
     description: 'End-to-end sheet metal fabrication from prototyping to mass production with precision engineering.',
-    heroImage: '/images/services/sheet-metal-hero.jpg',
+    heroImage: Raw1,
     model: '/models/sheet-metal-machine.glb',
     features: [
       '0.5mm - 8mm thickness range',
@@ -629,7 +639,7 @@ const serviceData = {
     subtitle: 'Custom Control Technology',
     tagline: 'Custom Control Solutions',
     description: 'Custom engineered electric control panels built to exact specifications with precision manufacturing.',
-    heroImage: '/images/services/electric-panel-hero.jpg',
+    heroImage:Raw2,
     model: '/models/electric-panel-machine.glb',
     features: [
       'IEC/UL compliant',
@@ -742,332 +752,332 @@ const serviceData = {
     ]
   },
   'industrial-painting-services': {
-  id: 'industrial-painting-services',
-  title: 'Industrial Painting Services',
-  subtitle: 'Professional Surface Coating Technology',
-  tagline: 'Advanced Painting & Coating Solutions',
-  description: 'Professional industrial painting and protective coating services for fabricated structures, machinery, and industrial equipment.',
-  heroImage: '/images/services/industrial-painting-hero.jpg',
-  model: '/models/painting-machine.glb',
+    id: 'industrial-painting-services',
+    title: 'Industrial Painting Services',
+    subtitle: 'Professional Surface Coating Technology',
+    tagline: 'Advanced Painting & Coating Solutions',
+    description: 'Professional industrial painting and protective coating services for fabricated structures, machinery, and industrial equipment.',
+    heroImage: Painting1,
+    model: '/models/painting-machine.glb',
 
-  features: [
-    'Powder coating solutions',
-    'Anti-corrosion protection',
-    'Industrial spray painting',
-    'Surface preparation',
-    'Heat resistant coatings',
-    'Premium finish quality'
-  ],
+    features: [
+      'Powder coating solutions',
+      'Anti-corrosion protection',
+      'Industrial spray painting',
+      'Surface preparation',
+      'Heat resistant coatings',
+      'Premium finish quality'
+    ],
 
-  overview: {
-    technology: 'Advanced industrial spray painting and powder coating systems with precision finishing.',
-    precision: 'Uniform coating thickness with superior adhesion and long-lasting durability.',
-    materials: 'Expertise in coating mild steel, stainless steel, aluminum, and fabricated structures.',
-    capacity: 'Large-scale industrial painting for machinery, panels, structures, and fabricated products.',
-    automation: 'Modern spray systems and controlled curing processes for premium quality finishes.',
-    quality: 'Strict surface preparation and coating quality inspection for long-term performance.'
+    overview: {
+      technology: 'Advanced industrial spray painting and powder coating systems with precision finishing.',
+      precision: 'Uniform coating thickness with superior adhesion and long-lasting durability.',
+      materials: 'Expertise in coating mild steel, stainless steel, aluminum, and fabricated structures.',
+      capacity: 'Large-scale industrial painting for machinery, panels, structures, and fabricated products.',
+      automation: 'Modern spray systems and controlled curing processes for premium quality finishes.',
+      quality: 'Strict surface preparation and coating quality inspection for long-term performance.'
+    },
+
+    capabilities: [
+      {
+        icon: Paintbrush,
+        title: 'Premium Finishing',
+        description: 'High-quality industrial finishing with smooth and durable coatings.',
+        features: [
+          'Smooth finish',
+          'Uniform coating',
+          'Premium aesthetics',
+          'Long durability'
+        ]
+      },
+      {
+        icon: Shield,
+        title: 'Anti-Corrosion Protection',
+        description: 'Protective coatings to prevent rust and environmental damage.',
+        features: [
+          'Rust prevention',
+          'Weather resistance',
+          'Chemical resistance',
+          'Industrial protection'
+        ]
+      },
+      {
+        icon: Factory,
+        title: 'Large Scale Painting',
+        description: 'Industrial painting solutions for heavy machinery and structures.',
+        features: [
+          'Heavy structures',
+          'Machine coating',
+          'Fabricated parts',
+          'Bulk processing'
+        ]
+      },
+      {
+        icon: Zap,
+        title: 'Modern Coating Technology',
+        description: 'Advanced spray systems and powder coating technology.',
+        features: [
+          'Powder coating',
+          'Spray painting',
+          'Fast curing',
+          'Efficient process'
+        ]
+      }
+    ],
+
+    materials: [
+      {
+        name: 'Mild Steel',
+        thickness: 'All Sizes',
+        applications: 'Industrial structures, fabricated products'
+      },
+      {
+        name: 'Stainless Steel',
+        thickness: 'All Sizes',
+        applications: 'Decorative and corrosion-resistant applications'
+      },
+      {
+        name: 'Aluminum',
+        thickness: 'All Sizes',
+        applications: 'Lightweight industrial components'
+      },
+      {
+        name: 'Heavy Fabricated Parts',
+        thickness: 'Custom',
+        applications: 'Industrial machinery and structures'
+      }
+    ],
+
+    industries: [
+      {
+        name: 'Manufacturing',
+        applications: 'Industrial machines, fabricated structures'
+      },
+      {
+        name: 'Construction',
+        applications: 'Structural steel and architectural components'
+      },
+      {
+        name: 'Automotive',
+        applications: 'Industrial vehicle and component coatings'
+      },
+      {
+        name: 'Infrastructure',
+        applications: 'Outdoor industrial structures and equipment'
+      }
+    ],
+
+    process: [
+      {
+        step: 1,
+        title: 'Surface Preparation',
+        description: 'Cleaning, grinding, and preparation for coating adhesion.'
+      },
+      {
+        step: 2,
+        title: 'Primer Application',
+        description: 'Application of industrial-grade primer coating.'
+      },
+      {
+        step: 3,
+        title: 'Painting & Coating',
+        description: 'Precision spray painting or powder coating process.'
+      },
+      {
+        step: 4,
+        title: 'Curing Process',
+        description: 'Controlled curing for maximum durability and finish.'
+      },
+      {
+        step: 5,
+        title: 'Quality Inspection',
+        description: 'Final inspection for coating quality and consistency.'
+      }
+    ],
+
+    stats: [
+      {
+        value: '100%',
+        label: 'Coating Coverage'
+      },
+      {
+        value: '500+',
+        label: 'Projects Completed'
+      },
+      {
+        value: 'Anti-Rust',
+        label: 'Protection'
+      },
+      {
+        value: 'Premium',
+        label: 'Finish Quality'
+      }
+    ]
   },
 
-  capabilities: [
-    {
-      icon: Paintbrush,
-      title: 'Premium Finishing',
-      description: 'High-quality industrial finishing with smooth and durable coatings.',
-      features: [
-        'Smooth finish',
-        'Uniform coating',
-        'Premium aesthetics',
-        'Long durability'
-      ]
-    },
-    {
-      icon: Shield,
-      title: 'Anti-Corrosion Protection',
-      description: 'Protective coatings to prevent rust and environmental damage.',
-      features: [
-        'Rust prevention',
-        'Weather resistance',
-        'Chemical resistance',
-        'Industrial protection'
-      ]
-    },
-    {
-      icon: Factory,
-      title: 'Large Scale Painting',
-      description: 'Industrial painting solutions for heavy machinery and structures.',
-      features: [
-        'Heavy structures',
-        'Machine coating',
-        'Fabricated parts',
-        'Bulk processing'
-      ]
-    },
-    {
-      icon: Zap,
-      title: 'Modern Coating Technology',
-      description: 'Advanced spray systems and powder coating technology.',
-      features: [
-        'Powder coating',
-        'Spray painting',
-        'Fast curing',
-        'Efficient process'
-      ]
-    }
-  ],
+  'metal-surface-treatment': {
+    id: 'metal-surface-treatment',
+    title: 'Metal Surface Treatment',
+    subtitle: 'Advanced Surface Enhancement Technology',
+    tagline: 'Surface Protection & Treatment',
+    description: 'Professional surface treatment services including sand blasting, rust removal, polishing, and chemical treatment for industrial components.',
+    heroImage: SandBlasting1,
+    model: '/models/surface-treatment-machine.glb',
 
-  materials: [
-    {
-      name: 'Mild Steel',
-      thickness: 'All Sizes',
-      applications: 'Industrial structures, fabricated products'
-    },
-    {
-      name: 'Stainless Steel',
-      thickness: 'All Sizes',
-      applications: 'Decorative and corrosion-resistant applications'
-    },
-    {
-      name: 'Aluminum',
-      thickness: 'All Sizes',
-      applications: 'Lightweight industrial components'
-    },
-    {
-      name: 'Heavy Fabricated Parts',
-      thickness: 'Custom',
-      applications: 'Industrial machinery and structures'
-    }
-  ],
+    features: [
+      'Sand blasting',
+      'Rust removal',
+      'Chemical treatment',
+      'Surface polishing',
+      'Protective finishing',
+      'Industrial durability'
+    ],
 
-  industries: [
-    {
-      name: 'Manufacturing',
-      applications: 'Industrial machines, fabricated structures'
+    overview: {
+      technology: 'Advanced surface preparation and treatment technologies for industrial-grade durability.',
+      precision: 'Uniform surface finishing and treatment processes for enhanced coating adhesion.',
+      materials: 'Surface treatment expertise for steel, stainless steel, aluminum, and fabricated components.',
+      capacity: 'Large-scale processing for industrial components and fabricated structures.',
+      automation: 'Modern blasting and polishing equipment for efficient production.',
+      quality: 'Strict inspection and quality standards for surface cleanliness and finish.'
     },
-    {
-      name: 'Construction',
-      applications: 'Structural steel and architectural components'
-    },
-    {
-      name: 'Automotive',
-      applications: 'Industrial vehicle and component coatings'
-    },
-    {
-      name: 'Infrastructure',
-      applications: 'Outdoor industrial structures and equipment'
-    }
-  ],
 
-  process: [
-    {
-      step: 1,
-      title: 'Surface Preparation',
-      description: 'Cleaning, grinding, and preparation for coating adhesion.'
-    },
-    {
-      step: 2,
-      title: 'Primer Application',
-      description: 'Application of industrial-grade primer coating.'
-    },
-    {
-      step: 3,
-      title: 'Painting & Coating',
-      description: 'Precision spray painting or powder coating process.'
-    },
-    {
-      step: 4,
-      title: 'Curing Process',
-      description: 'Controlled curing for maximum durability and finish.'
-    },
-    {
-      step: 5,
-      title: 'Quality Inspection',
-      description: 'Final inspection for coating quality and consistency.'
-    }
-  ],
+    capabilities: [
+      {
+        icon: BrushCleaning,
+        title: 'Surface Preparation',
+        description: 'Professional preparation for coating and fabrication.',
+        features: [
+          'Cleaning',
+          'Deburring',
+          'Grinding',
+          'Preparation'
+        ]
+      },
+      {
+        icon: Shield,
+        title: 'Rust Protection',
+        description: 'Protective treatment to improve durability and lifespan.',
+        features: [
+          'Rust removal',
+          'Corrosion control',
+          'Protection',
+          'Long durability'
+        ]
+      },
+      {
+        icon: Sparkles,
+        title: 'Polishing & Finishing',
+        description: 'Premium polishing and aesthetic surface finishing.',
+        features: [
+          'Smooth finish',
+          'Industrial polishing',
+          'Surface shine',
+          'Visual quality'
+        ]
+      },
+      {
+        icon: Factory,
+        title: 'Industrial Processing',
+        description: 'High-capacity treatment solutions for industrial fabrication.',
+        features: [
+          'Bulk processing',
+          'Heavy structures',
+          'Machine components',
+          'Industrial scale'
+        ]
+      }
+    ],
 
-  stats: [
-    {
-      value: '100%',
-      label: 'Coating Coverage'
-    },
-    {
-      value: '500+',
-      label: 'Projects Completed'
-    },
-    {
-      value: 'Anti-Rust',
-      label: 'Protection'
-    },
-    {
-      value: 'Premium',
-      label: 'Finish Quality'
-    }
-  ]
-},
+    materials: [
+      {
+        name: 'Carbon Steel',
+        thickness: 'All Sizes',
+        applications: 'Industrial structures and fabricated parts'
+      },
+      {
+        name: 'Stainless Steel',
+        thickness: 'All Sizes',
+        applications: 'Food-grade and decorative finishing'
+      },
+      {
+        name: 'Aluminum',
+        thickness: 'All Sizes',
+        applications: 'Lightweight industrial components'
+      },
+      {
+        name: 'Heavy Machinery Parts',
+        thickness: 'Custom',
+        applications: 'Industrial machine restoration and finishing'
+      }
+    ],
 
-'metal-surface-treatment': {
-  id: 'metal-surface-treatment',
-  title: 'Metal Surface Treatment',
-  subtitle: 'Advanced Surface Enhancement Technology',
-  tagline: 'Surface Protection & Treatment',
-  description: 'Professional surface treatment services including sand blasting, rust removal, polishing, and chemical treatment for industrial components.',
-  heroImage: '/images/services/surface-treatment-hero.jpg',
-  model: '/models/surface-treatment-machine.glb',
+    industries: [
+      {
+        name: 'Manufacturing',
+        applications: 'Machine parts and fabricated structures'
+      },
+      {
+        name: 'Construction',
+        applications: 'Structural steel preparation and finishing'
+      },
+      {
+        name: 'Automotive',
+        applications: 'Vehicle and component treatment'
+      },
+      {
+        name: 'Industrial Equipment',
+        applications: 'Heavy equipment restoration and protection'
+      }
+    ],
 
-  features: [
-    'Sand blasting',
-    'Rust removal',
-    'Chemical treatment',
-    'Surface polishing',
-    'Protective finishing',
-    'Industrial durability'
-  ],
+    process: [
+      {
+        step: 1,
+        title: 'Inspection',
+        description: 'Surface inspection and treatment planning.'
+      },
+      {
+        step: 2,
+        title: 'Cleaning & Preparation',
+        description: 'Removal of contaminants and preparation process.'
+      },
+      {
+        step: 3,
+        title: 'Surface Treatment',
+        description: 'Sand blasting, polishing, or chemical treatment.'
+      },
+      {
+        step: 4,
+        title: 'Protection Process',
+        description: 'Protective finishing and treatment application.'
+      },
+      {
+        step: 5,
+        title: 'Final Quality Check',
+        description: 'Inspection for finish quality and durability.'
+      }
+    ],
 
-  overview: {
-    technology: 'Advanced surface preparation and treatment technologies for industrial-grade durability.',
-    precision: 'Uniform surface finishing and treatment processes for enhanced coating adhesion.',
-    materials: 'Surface treatment expertise for steel, stainless steel, aluminum, and fabricated components.',
-    capacity: 'Large-scale processing for industrial components and fabricated structures.',
-    automation: 'Modern blasting and polishing equipment for efficient production.',
-    quality: 'Strict inspection and quality standards for surface cleanliness and finish.'
-  },
-
-  capabilities: [
-    {
-      icon: BrushCleaning,
-      title: 'Surface Preparation',
-      description: 'Professional preparation for coating and fabrication.',
-      features: [
-        'Cleaning',
-        'Deburring',
-        'Grinding',
-        'Preparation'
-      ]
-    },
-    {
-      icon: Shield,
-      title: 'Rust Protection',
-      description: 'Protective treatment to improve durability and lifespan.',
-      features: [
-        'Rust removal',
-        'Corrosion control',
-        'Protection',
-        'Long durability'
-      ]
-    },
-    {
-      icon: Sparkles,
-      title: 'Polishing & Finishing',
-      description: 'Premium polishing and aesthetic surface finishing.',
-      features: [
-        'Smooth finish',
-        'Industrial polishing',
-        'Surface shine',
-        'Visual quality'
-      ]
-    },
-    {
-      icon: Factory,
-      title: 'Industrial Processing',
-      description: 'High-capacity treatment solutions for industrial fabrication.',
-      features: [
-        'Bulk processing',
-        'Heavy structures',
-        'Machine components',
-        'Industrial scale'
-      ]
-    }
-  ],
-
-  materials: [
-    {
-      name: 'Carbon Steel',
-      thickness: 'All Sizes',
-      applications: 'Industrial structures and fabricated parts'
-    },
-    {
-      name: 'Stainless Steel',
-      thickness: 'All Sizes',
-      applications: 'Food-grade and decorative finishing'
-    },
-    {
-      name: 'Aluminum',
-      thickness: 'All Sizes',
-      applications: 'Lightweight industrial components'
-    },
-    {
-      name: 'Heavy Machinery Parts',
-      thickness: 'Custom',
-      applications: 'Industrial machine restoration and finishing'
-    }
-  ],
-
-  industries: [
-    {
-      name: 'Manufacturing',
-      applications: 'Machine parts and fabricated structures'
-    },
-    {
-      name: 'Construction',
-      applications: 'Structural steel preparation and finishing'
-    },
-    {
-      name: 'Automotive',
-      applications: 'Vehicle and component treatment'
-    },
-    {
-      name: 'Industrial Equipment',
-      applications: 'Heavy equipment restoration and protection'
-    }
-  ],
-
-  process: [
-    {
-      step: 1,
-      title: 'Inspection',
-      description: 'Surface inspection and treatment planning.'
-    },
-    {
-      step: 2,
-      title: 'Cleaning & Preparation',
-      description: 'Removal of contaminants and preparation process.'
-    },
-    {
-      step: 3,
-      title: 'Surface Treatment',
-      description: 'Sand blasting, polishing, or chemical treatment.'
-    },
-    {
-      step: 4,
-      title: 'Protection Process',
-      description: 'Protective finishing and treatment application.'
-    },
-    {
-      step: 5,
-      title: 'Final Quality Check',
-      description: 'Inspection for finish quality and durability.'
-    }
-  ],
-
-  stats: [
-    {
-      value: '100%',
-      label: 'Surface Coverage'
-    },
-    {
-      value: 'Anti-Rust',
-      label: 'Protection'
-    },
-    {
-      value: 'Industrial',
-      label: 'Grade Finish'
-    },
-    {
-      value: '400+',
-      label: 'Projects Completed'
-    }
-  ]
-}
+    stats: [
+      {
+        value: '100%',
+        label: 'Surface Coverage'
+      },
+      {
+        value: 'Anti-Rust',
+        label: 'Protection'
+      },
+      {
+        value: 'Industrial',
+        label: 'Grade Finish'
+      },
+      {
+        value: '400+',
+        label: 'Projects Completed'
+      }
+    ]
+  }
 };
 
 const ServiceDetail = () => {
@@ -1076,7 +1086,7 @@ const ServiceDetail = () => {
   const [hoveredCapability, setHoveredCapability] = useState(null);
   const { scrollY } = useScroll();
   const navigate = useNavigate();
-  
+
   const y = useTransform(scrollY, [0, 300], [0, 50]);
 
   useEffect(() => {
@@ -1104,7 +1114,31 @@ const ServiceDetail = () => {
 
   return (
     <div className="min-h-screen bg-deep-black">
-      
+      <div className="container mx-auto px-6 md:px-12 pt-3">
+  <Link
+    to="/services"
+    className="
+      inline-flex
+      items-center
+      gap-2
+
+      text-industrial-yellow
+      hover:text-yellow-400
+
+      text-sm
+      md:text-base
+
+      font-medium
+
+      transition-all
+      duration-300
+    "
+  >
+    <span>←</span>
+    <span>Back to Services</span>
+  </Link>
+</div>
+
       {/* 3D Hero Section */}
       <ServiceHero3D service={service} />
 
@@ -1112,7 +1146,7 @@ const ServiceDetail = () => {
       <section className="py-20 bg-gunmetal-gray">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
+
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -1167,7 +1201,7 @@ const ServiceDetail = () => {
       {/* Key Capabilities Section */}
       <section className="py-20 bg-deep-black">
         <div className="container mx-auto px-6 md:px-12">
-          
+
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1196,7 +1230,7 @@ const ServiceDetail = () => {
                 className="relative group"
               >
                 <div className="bg-[#0a0a0a] border border-[#333] rounded-2xl p-6 hover:border-industrial-yellow/50 transition-all duration-300 hover:shadow-lg hover:shadow-industrial-yellow/20">
-                  
+
                   {/* Icon */}
                   <motion.div
                     animate={{
@@ -1212,7 +1246,7 @@ const ServiceDetail = () => {
                   {/* Content */}
                   <h3 className="text-xl font-bold text-white mb-3">{capability.title}</h3>
                   <p className="text-gray-300 text-sm mb-4">{capability.description}</p>
-                  
+
                   {/* Features */}
                   <ul className="space-y-2">
                     {capability.features.map((feature, featureIndex) => (
@@ -1241,7 +1275,7 @@ const ServiceDetail = () => {
       {/* Materials Section */}
       <section className="py-20 bg-gunmetal-gray">
         <div className="container mx-auto px-6 md:px-12">
-          
+
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1279,7 +1313,7 @@ const ServiceDetail = () => {
       {/* Industries Served Section */}
       <section className="py-20 bg-deep-black">
         <div className="container mx-auto px-6 md:px-12">
-          
+
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1322,7 +1356,7 @@ const ServiceDetail = () => {
         </div>
 
         <div className="container mx-auto px-6 md:px-12 relative z-10">
-          
+
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1371,10 +1405,10 @@ const ServiceDetail = () => {
                     className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:ml-auto md:pl-8'}`}
                   >
                     <div className="bg-[#0a0a0a] border border-[#333] rounded-2xl p-6 md:p-8 relative overflow-hidden group hover:border-industrial-yellow/50 transition-all duration-300">
-                      
+
                       {/* Glow Effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-industrial-yellow/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      
+
                       {/* Content */}
                       <div className="relative z-10">
                         <div className="flex items-center gap-3 mb-4">
@@ -1383,11 +1417,11 @@ const ServiceDetail = () => {
                           </div>
                           <div className="h-px bg-industrial-yellow/30 flex-1" />
                         </div>
-                        
+
                         <h3 className="text-xl md:text-2xl font-bold text-white mb-4 group-hover:text-industrial-yellow transition-colors duration-300">
                           {step.title}
                         </h3>
-                        
+
                         <p className="text-gray-300 text-sm md:text-base leading-relaxed">
                           {step.description}
                         </p>
@@ -1414,7 +1448,7 @@ const ServiceDetail = () => {
                         transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
                         className="absolute inset-0 bg-industrial-yellow rounded-full blur-lg opacity-50"
                       />
-                      
+
                       {/* Node */}
                       <div className="relative w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-industrial-yellow to-yellow-400 rounded-full flex items-center justify-center font-bold text-black text-lg md:text-xl shadow-lg shadow-industrial-yellow/30">
                         {step.step}
@@ -1434,7 +1468,7 @@ const ServiceDetail = () => {
       {/* Features & Stats Section */}
       <section className="pt-20 bg-deep-black">
         <div className="container mx-auto px-6 md:px-12">
-          
+
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1492,17 +1526,17 @@ const ServiceDetail = () => {
             <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
               Get in touch with our expert team to discuss your specific requirements and discover how we can help you achieve your manufacturing goals.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/quote">
-              <Button variant="primary" className="px-8 py-4">
-                Request Quote
-              </Button>
+                <Button variant="primary" className="px-8 py-4">
+                  Request Quote
+                </Button>
               </Link>
               <Link to="/contact-us">
-              <Button variant="outline" className="px-8 py-4">
-                Contact Expert
-              </Button>
+                <Button variant="outline" className="px-8 py-4">
+                  Contact Expert
+                </Button>
               </Link>
             </div>
           </motion.div>

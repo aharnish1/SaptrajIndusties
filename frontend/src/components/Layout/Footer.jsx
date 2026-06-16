@@ -19,10 +19,11 @@ const Footer = () => {
     const fetchSettings = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL || ''}/settings`);
+        const settingsData = response.data.data || response.data;
         setContactInfo({
-          email: response.data.email || 'saptarajindustries@gmail.com',
-          phone: response.data.phone || '+91 98765 43210',
-          location: response.data.location || 'Pune, Maharashtra, India'
+          email: settingsData.email || 'saptarajindustries@gmail.com',
+          phone: settingsData.phone || '+91 98765 43210',
+          location: settingsData.location || 'Pune, Maharashtra, India'
         });
       } catch (error) {
         console.error('Error loading settings:', error);

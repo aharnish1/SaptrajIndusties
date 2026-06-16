@@ -7,7 +7,18 @@ import logo from '../../assets/logo.png';
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -143,91 +154,142 @@ return (
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: '-100%' }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: '-100%' }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="fixed inset-0 z-30 bg-bg-deep flex flex-col items-center justify-center pt-20 industrial-grid"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black/80 z-[105] lg:hidden backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+            className="fixed top-0 right-0 bottom-0 w-full sm:w-[400px] bg-[#050505] z-[110] flex flex-col border-l border-[#222222] shadow-2xl lg:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation"
           >
-            <div className="flex flex-col items-center gap-4 sm:gap-6 w-full px-4 sm:px-6 overflow-y-auto max-h-screen pb-8">
-              {navLinks.map((link, index) => {
+            {/* Header Area */}
+            <div className="flex items-center justify-between px-5 pt-5 pb-5 border-b border-[#222222] shrink-0">
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 group focus:outline-none">
+                <img 
+                  src={logo} 
+                  alt="Saptraj Logo" 
+                  className="h-8 w-auto object-contain"
+                />
+                <div className="flex flex-col">
+                  <span className="font-display font-bold text-[16px] tracking-wider text-[#ffffff]">
+                    SAPTRAJ
+                  </span>
+                  <span className="text-[9px] tracking-[0.2em] text-[#9ca3af] uppercase">Industries LLP</span>
+                </div>
+              </Link>
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 text-[#9ca3af] hover:text-[#f59e0b] hover:bg-[#111111] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
+                aria-label="Close navigation menu"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Navigation Area */}
+            <nav className="flex-1 overflow-y-auto px-5 py-5 space-y-[6px]">
+              {navLinks.map((link) => {
                 if (link.dropdown) {
+                  const isOpen = openDropdown === link.name;
                   return (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      key={link.name}
-                      className="w-full"
-                    >
-                      <div className="text-center mb-3 sm:mb-4">
-                        <span className="text-lg sm:text-2xl font-display font-bold uppercase tracking-widest text-accent-primary text-glow-subtle">
-                          {link.name}
-                        </span>
-                      </div>
-                      <div className="space-y-2 sm:space-y-3 pl-6 sm:pl-8">
-                        {link.dropdown.map((dropdownItem, dropdownIndex) => (
+                    <div key={link.name} className="flex flex-col">
+                      <button 
+                        onClick={() => setOpenDropdown(isOpen ? null : link.name)}
+                        className={`flex items-center justify-between w-full min-h-[52px] py-3 px-4 rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-[#f59e0b] ${
+                          isOpen || link.dropdown.some(item => location.pathname === item.path)
+                            ? 'bg-[#111111] border-[#f59e0b] shadow-[0_0_10px_rgba(245,158,11,0.1)] text-[#ffffff]' 
+                            : 'bg-[#111111] border-[#222222] text-[#ffffff] hover:border-[#f59e0b] hover:shadow-[0_0_10px_rgba(245,158,11,0.1)]'
+                        }`}
+                        aria-expanded={isOpen}
+                      >
+                        <span className="text-[16px] sm:text-[18px] font-semibold uppercase tracking-[2px] font-body">{link.name}</span>
+                        <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                          <ChevronDown size={18} className={isOpen ? "text-[#f59e0b]" : "text-[#9ca3af]"} />
+                        </motion.div>
+                      </button>
+                      <AnimatePresence>
+                        {isOpen && (
                           <motion.div
-                            key={dropdownItem.name}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.1 + dropdownIndex * 0.05 }}
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
                           >
-                            <Link
-                              to={dropdownItem.path}
-                              onClick={() => setMobileMenuOpen(false)}
-                              className={`text-base sm:text-lg font-semibold uppercase tracking-wider block text-left font-body ${
-                                location.pathname === dropdownItem.path ? 'text-accent-primary' : 'text-text-muted hover:text-text-primary'
-                              }`}
-                            >
-                              {dropdownItem.name}
-                            </Link>
+                            <div className="pl-[24px] pt-1.5 space-y-1">
+                              {link.dropdown.map(dropdownItem => (
+                                <Link
+                                  key={dropdownItem.name}
+                                  to={dropdownItem.path}
+                                  onClick={() => setMobileMenuOpen(false)}
+                                  className={`block min-h-[44px] py-2.5 flex items-center px-4 rounded-md text-[14px] tracking-[1px] font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#f59e0b] font-body ${
+                                    location.pathname === dropdownItem.path 
+                                      ? 'text-[#f59e0b] bg-[#f59e0b]/10' 
+                                      : 'text-[#9ca3af] hover:text-[#ffffff] hover:bg-[#222222]'
+                                  }`}
+                                >
+                                  {dropdownItem.name}
+                                </Link>
+                              ))}
+                            </div>
                           </motion.div>
-                        ))}
-                      </div>
-                      <div className="border-b border-border-subtle mt-3 sm:mt-4"></div>
-                    </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   );
                 }
-                
+
                 return (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                  <Link
                     key={link.name}
-                    className="w-full text-center border-b border-border-subtle pb-3 sm:pb-4"
+                    to={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center w-full min-h-[52px] py-3 px-4 rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-[#f59e0b] font-body ${
+                      location.pathname === link.path
+                        ? 'border-[#f59e0b] bg-[#f59e0b]/10 text-[#f59e0b]'
+                        : 'border-[#222222] bg-[#111111] text-[#ffffff] hover:border-[#f59e0b] hover:shadow-[0_0_10px_rgba(245,158,11,0.1)]'
+                    }`}
                   >
-                    <Link
-                      to={link.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`text-lg sm:text-2xl font-display font-bold uppercase tracking-widest font-body ${
-                        location.pathname === link.path ? 'text-accent-primary text-glow-subtle' : 'text-text-primary'
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
-                  </motion.div>
+                    <span className="text-[16px] sm:text-[18px] font-semibold uppercase tracking-[2px]">{link.name}</span>
+                  </Link>
                 );
               })}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: navLinks.length * 0.1 }}
-                className="mt-3 sm:mt-4 w-full"
+            </nav>
+
+            {/* Bottom CTA & Footer */}
+            <div className="border-t border-[#222222] p-5 bg-[#050505] shrink-0">
+              <Link
+                to="/quote"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center min-h-[48px] py-3 bg-[#f59e0b] text-[#050505] text-base font-bold uppercase tracking-[2px] rounded-lg hover:bg-yellow-400 hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all mb-4 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#050505] font-body"
               >
-                <Link
-                  to="/quote"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-6 sm:px-8 py-3 sm:py-4 btn-primary-gradient text-deep-black font-bold uppercase tracking-widest block w-full text-center text-base sm:text-lg font-body"
-                >
-                  Request Quote
-                </Link>
-              </motion.div>
+                Request Quote
+              </Link>
+              
+              <div className="text-center">
+                <p className="text-[#ffffff] font-semibold text-xs tracking-[1px] uppercase mb-0.5 font-display">Saptraj Industries LLP</p>
+                <p className="text-[#9ca3af] text-[11px] tracking-wider font-body">Precision Metal Fabrication</p>
+              </div>
             </div>
           </motion.div>
         )}

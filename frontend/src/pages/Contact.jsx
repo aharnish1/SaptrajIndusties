@@ -103,50 +103,17 @@ const Contact = () => {
       
       <section className="py-12 sm:py-16 md:py-24 bg-bg-deep industrial-grid">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div className="w-full lg:w-1/3">
-            <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary mb-6 sm:mb-8 border-l-4 border-accent-primary pl-4">Contact Information</h2>
-            <div className="space-y-6 sm:space-y-8">
-              <div className="flex gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-metal-dark rounded flex items-center justify-center shrink-0 border border-border-subtle box-glow-hover">
-                  <MapPin className="text-accent-primary w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-                <div>
-                  <h4 className="text-text-primary font-bold mb-1 font-body text-sm sm:text-base">Factory Location</h4>
-                  <p className="text-text-muted text-xs sm:text-sm font-body leading-relaxed">GATE NO.262 NANEKARWADI, OPP GANDHARV HOTEL, ALANDI PHATA,
-                  CHAKAN, TAL - KHED, DIST, PUNE - 410501, MAHARASHTRA, INDIA.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-metal-dark rounded flex items-center justify-center shrink-0 border border-border-subtle box-glow-hover">
-                  <Phone className="text-accent-primary w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-                <div>
-                  <h4 className="text-text-primary font-bold mb-1 font-body text-sm sm:text-base">Phone Number</h4>
-                  <p className="text-text-muted text-xs sm:text-sm font-body">+91 7588735608</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-metal-dark rounded flex items-center justify-center shrink-0 border border-border-subtle box-glow-hover">
-                  <Mail className="text-accent-primary w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-                <div>
-                  <h4 className="text-text-primary font-bold mb-1 font-body text-sm sm:text-base">Email Address</h4>
-                  <p className="text-text-muted text-xs sm:text-sm font-body break-all">saptarajindustries@gmail.com</p>
-                </div>
-              </div>
-            </div>
-          </div>
           
-          <div className="w-full lg:w-2/3">
+          <div className="w-full lg:w-2/3 mx-auto">
             <div className="card-industrial p-6 sm:p-8 rounded-lg sm:rounded-xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent"></div>
+              <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent"></div>
               <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary mb-4 sm:mb-6">Send us a Message</h2>
               <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <Input 
                     label="Full Name" 
                     id="name" 
-                    placeholder="John Doe" 
+                    placeholder="Your Good Name" 
                     value={formData.name}
                     onChange={handleInputChange}
                     required 
@@ -164,7 +131,7 @@ const Contact = () => {
                     label="Email Address" 
                     id="email" 
                     type="email" 
-                    placeholder="john@example.com" 
+                    placeholder="email@example.com" 
                     value={formData.email}
                     onChange={handleInputChange}
                     required 
@@ -172,7 +139,7 @@ const Contact = () => {
                   <Input 
                     label="Phone Number" 
                     id="phone" 
-                    placeholder="+91 98765 43210" 
+                    placeholder="+91 XXXXXXXXXX" 
                     value={formData.phone}
                     onChange={handleInputChange}
                   />

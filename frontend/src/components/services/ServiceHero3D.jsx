@@ -1,29 +1,33 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import aboutBg from "../../assets/aboutBg.jpeg";
 import Button from '../UI/Button';
 import { Link } from 'react-router-dom';
 
 const ServiceHero3D = ({ service }) => {
   return (
     <section className="relative h-screen overflow-hidden bg-deep-black flex items-center">
-      
+
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent z-0" />
 
       {/* Main Container */}
-      <div className="container mx-auto px-6 md:px-12 relative z-20 h-full">
-        
+      <div className="container mx-auto md:px-12 relative z-20 h-full">
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
-          
+
           {/* LEFT SIDE - 3D MODEL */}
-          <div
-                  className="relative py-32 md:py-40 border-b border-[#333] bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url(${aboutBg})`,
-                  }}
-          ></div>
+          <div className="relative h-[100px] lg:h-[650px] rounded-xl overflow-hidden border border-[#333] shadow-2xl">
+
+            <img
+              src={service.heroImage}
+              alt={service.title}
+              className="w-full h-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+          </div>
 
           {/* RIGHT SIDE - CONTENT */}
           <div className="relative z-30 text-center lg:text-left">
@@ -105,27 +109,27 @@ const ServiceHero3D = ({ service }) => {
                 transition={{ delay: 0.7 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               >
-              <Link to="/quote">
-                <Button
-                  variant="primary"
-                  className="px-8 py-4 group"
-                >
-                  <span className="flex items-center gap-2">
-                    Request Quote
-                    <ArrowRight size={18} />
-                  </span>
-                </Button>
+                <Link to="/quote">
+                  <Button
+                    variant="primary"
+                    className="px-8 py-4 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      Request Quote
+                      <ArrowRight size={18} />
+                    </span>
+                  </Button>
                 </Link>
                 <Link to="/contact-us">
-                <Button
-                  variant="outline"
-                  className="px-8 py-4 group"
-                >
-                  <span className="flex items-center gap-2">
-                    Contact Expert
-                    <ArrowRight size={18} />
-                  </span>
-                </Button>
+                  <Button
+                    variant="outline"
+                    className="px-8 py-4 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      Contact Expert
+                      <ArrowRight size={18} />
+                    </span>
+                  </Button>
                 </Link>
 
               </motion.div>

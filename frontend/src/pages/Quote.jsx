@@ -5,6 +5,7 @@ import FileUpload from '../components/UI/FileUpload';
 import { Toaster, toast } from 'react-hot-toast';
 import { Loader2, CheckCircle, X, AlertCircle } from 'lucide-react';
 import { inquiriesAPI } from '../services/api';
+import aboutBg from "../assets/aboutBg.jpeg";
 
 const Quote = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -166,18 +167,25 @@ const Quote = () => {
   return (
     <div className="w-full">
       {/* Hero */}
-      <div className="bg-metal-dark py-12 sm:py-16 md:py-20 border-b border-border-subtle industrial-grid">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-text-primary mb-3 sm:mb-4 steel-heading" data-text="Request a Quote">
-            Request a Quote
-          </h1>
 
-          <p className="text-text-muted max-w-2xl mx-auto font-body text-sm sm:text-base px-4">
-            Provide your requirement details and our engineering team
-            will get back to you with a comprehensive proposal.
-          </p>
-        </div>
-      </div>
+      <div className="relative py-16 sm:py-24 md:py-32 lg:py-40 border-b border-border-subtle bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${aboutBg})`,
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-black/70"></div>
+                    <div className="absolute inset-0 industrial-grid opacity-20"></div>
+            
+                    <div className="relative container mx-auto px-4 sm:px-6 md:px-12 text-center z-10">
+                      <h1 className="text-4xl md:text-6xl font-display font-bold text-text-primary mb-4 steel-heading" data-text="Contact Us">
+                        Request a Quote
+                      </h1>
+            
+                      <p className="text-text-muted max-w-2xl mx-auto font-body">
+                      Provide your requirement details and our engineering team
+            will get back to you with a comprehensive proposal.</p>
+                    </div>
+                  </div>
 
       {/* Form */}
       <section className="py-12 sm:py-16 md:py-24 bg-bg-deep industrial-grid">
@@ -202,7 +210,7 @@ const Quote = () => {
                     id="q_name"
                     value={formData.q_name}
                     onChange={handleInputChange}
-                    placeholder="John Doe"
+                    placeholder="Name"
                     required
                   />
 
@@ -221,7 +229,7 @@ const Quote = () => {
                     type="email"
                     value={formData.q_email}
                     onChange={handleInputChange}
-                    placeholder="john@example.com"
+                    placeholder="email@example.com"
                     required
                   />
 

@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import Button from '../UI/Button';
 import MetalDustText from '../UI/MetalDustText';
 import { ArrowRight } from 'lucide-react';
-import BG from '../../assets/BG.mp4';
+
+
+const BG = "https://res.cloudinary.com/dtwsq7gdq/video/upload/v1781680021/BG_sxgow6.mov";
 
 const HeroSection = () => {
   return (

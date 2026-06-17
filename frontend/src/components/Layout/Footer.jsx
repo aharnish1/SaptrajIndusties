@@ -21,9 +21,9 @@ const Footer = () => {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL || ''}/settings`);
         const settingsData = response.data.data || response.data;
         setContactInfo({
-          email: settingsData.email || 'saptarajindustries@gmail.com',
-          phone: settingsData.phone || '+91 98765 43210',
-          location: settingsData.location || 'Pune, Maharashtra, India'
+          email: settingsData.email ,
+          phone: settingsData.phone ,
+          location: settingsData.location 
         });
       } catch (error) {
         console.error('Error loading settings:', error);

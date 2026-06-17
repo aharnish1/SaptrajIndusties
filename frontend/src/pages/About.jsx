@@ -1,6 +1,8 @@
 import React from 'react';
 import aboutBg from "../assets/aboutBg.jpeg";
-import VIDEO from "../assets/VIDEO BG.mp4"; // IMPORT VIDEO
+
+// IMPORT VIDEO
+const VIDEO = "https://res.cloudinary.com/dtwsq7gdq/video/upload/v1781679389/VIDEO_BG_tpxhoc.mp4";
 
 const About = () => {
   return (

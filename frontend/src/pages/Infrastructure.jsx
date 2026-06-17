@@ -19,7 +19,7 @@ import CompleteWork4 from '../assets/infrastructurePhotoes/CompleteWork4.jpeg';
 import DeliveryArea1 from '../assets/infrastructurePhotoes/DeliveryArea1.jpeg';
 import DeliveryArea2 from '../assets/infrastructurePhotoes/DeliveryArea2.jpeg';
 import Fire1 from '../assets/infrastructurePhotoes/Fire1.jpeg';
-import Office1 from '../assets/infrastructurePhotoes/Office1.jpeg';
+import Office1 from '../assets/infrastructurePhotoes/office1.jpeg';
 import Outside1 from '../assets/infrastructurePhotoes/Outside1.jpeg';
 import Outside2 from '../assets/infrastructurePhotoes/Outside2.jpeg';
 import Outside3 from '../assets/infrastructurePhotoes/Outside3.jpeg';

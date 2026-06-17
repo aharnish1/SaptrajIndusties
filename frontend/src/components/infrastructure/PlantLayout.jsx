@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import FacilityHotspot from "./FacilityHotspot";
 import FacilityDetails from "./FacilityDetails";
 
-import PlantMap from "../../assets/PalntLayoutMap.png";
+import PlantMap from "../../assets/PlantLayoutMap.png";
 
 const PlantLayout = ({ facilities }) => {
   const defaultFacilityId =

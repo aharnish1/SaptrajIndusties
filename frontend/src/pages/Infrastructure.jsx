@@ -127,7 +127,7 @@ const Infrastructure = () => {
     {
       id: 12,
       image: SandBlasting1,
-      title: "Sand Blasting Booth",
+      title: "Shot Blasting Booth",
       description: "Dedicated surface preparation facility for cleaning and finishing metal components."
     },
 

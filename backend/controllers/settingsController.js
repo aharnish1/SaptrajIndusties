@@ -4,7 +4,7 @@ const DEFAULT_SETTINGS = {
   contactEmail: 'saptarajindustries@gmail.com',
   contactPhone: '+91 98765 43210',
   location: 'Pune, Maharashtra, India',
-  legalDepartmentEmail: 'aharnishparekar7@gmail.com'
+  legalDepartmentEmail: 'saptrajindustriesllp@gmail.com'
 };
 
 const initializeSettings = async () => {

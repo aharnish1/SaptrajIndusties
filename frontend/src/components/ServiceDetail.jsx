@@ -63,6 +63,7 @@ const serviceData = {
       technology: 'State-of-the-art Bodor Fiber Laser cutting systems with advanced CNC control',
       precision: '±0.1mm tolerance accuracy for intricate designs and tight specifications',
       materials: 'Expertise in cutting stainless steel, mild steel, aluminum, brass, and copper',
+      quality : 'Smooth, burr-free edges with minimal heat distortion and strict dimensional inspection',
       capacity: 'Cutting capacity up to 25mm thickness with 12kW laser power',
       speed: 'High-speed cutting up to 35m/min for optimal productivity',
       automation: 'Fully automated material handling and nesting optimization'
@@ -183,7 +184,8 @@ const serviceData = {
       materials: 'Expertise in bending stainless steel, mild steel, aluminum alloys',
       capacity: 'Bending capacity up to 4m length with 200 tons pressure',
       tooling: 'Extensive tooling library for various bend radii and profiles',
-      automation: 'CNC programming with automatic angle compensation'
+      automation: 'CNC programming with automatic angle compensation',
+      quality: ' Accurate bend consistency with comprehensive dimensional and angle verification '
     },
     capabilities: [
       {
@@ -298,6 +300,8 @@ const serviceData = {
     overview: {
       technology: 'Advanced MIG and arc welding equipment with certified welders',
       quality: 'AWS D1.1 certified welding procedures and qualified personnel',
+      precision : 'High-strength welds with consistent penetration and dimensional accuracy ',
+      automation : 'Semi-automatic MIG welding systems for efficient and repeatable production',
       materials: 'Expertise in welding carbon steel, stainless steel, aluminum alloys',
       capacity: 'Welding capacity for structural components and heavy assemblies',
       inspection: 'Non-destructive testing and quality verification',
@@ -415,7 +419,10 @@ const serviceData = {
     ],
     overview: {
       technology: 'Advanced structural fabrication with precision engineering',
+      capacity : 'Fabrication of heavy-duty structures, platforms, frames, and industrial assemblies ',
+      automation : 'CNC cutting, precision fabrication, and streamlined assembly workflows ',
       scale: 'Large-scale fabrication capacity for major industrial projects',
+      precision : '±1mm fabrication accuracy for structural frames, platforms, and heavy steel assemblies.',
       materials: 'Expertise in structural steel, heavy plates, and beams',
       equipment: 'State-of-the-art fabrication equipment and handling systems',
       quality: 'Rigorous quality control and structural integrity testing',
@@ -431,7 +438,7 @@ const serviceData = {
       {
         icon: Target,
         title: 'Precision Engineering',
-        description: 'Accurate fabrication with tight tolerances',
+        description: 'Accurate fabrication with tight tolerance capacity',
         features: ['Tight tolerances', 'Accurate cutting', 'Precise assembly', 'Quality control']
       },
       {
@@ -533,6 +540,9 @@ const serviceData = {
     ],
     overview: {
       technology: 'Comprehensive sheet metal fabrication with advanced equipment',
+      precision : '±0.2mm fabrication accuracy for complex sheet metal componentss ' ,
+      materials : 'Expertise in stainless steel, mild steel, galvanized steel, aluminum, and sheets',
+      automation : 'CNC laser cutting, precision bending, and automated fabrication workflows ',
       range: 'Complete fabrication from thin gauge to heavy sheet metal',
       processes: 'Cutting, bending, forming, welding, and assembly services',
       quality: 'Rigorous quality control and precision manufacturing',
@@ -549,7 +559,7 @@ const serviceData = {
       {
         icon: Target,
         title: 'Precision Manufacturing',
-        description: 'Accurate fabrication with tight tolerances',
+        description: 'Accurate fabrication with tight tolerance capacity',
         features: ['Tight tolerances', 'Precision cutting', 'Accurate forming', 'Quality assembly']
       },
       {
@@ -651,11 +661,11 @@ const serviceData = {
     ],
     overview: {
       technology: 'Advanced electrical panel fabrication with precision engineering',
-      customization: 'Fully customized panels to specific requirements',
-      compliance: 'IEC and UL compliant panel manufacturing',
-      integration: 'Complete panel assembly and component integration',
-      testing: 'Comprehensive electrical testing and quality verification',
-      documentation: 'Complete technical documentation and certification'
+      precision : 'Precision panel assembly with organized wiring and industry-standard layouts',
+      materials : 'Fabrication using CRCA sheets, stainless steel, aluminum enclosures, copper busbars, and electrical components',
+      capacity : ' Custom-built electrical panels for industrial, commercial, and automation applications' ,
+      automation : 'Modern assembly techniques with CNC panel fabrication and precision component integration ',
+      quality : 'Thorough electrical testing, inspection, and compliance with industry safety standardss '
     },
     capabilities: [
       {
@@ -667,7 +677,7 @@ const serviceData = {
       {
         icon: Shield,
         title: 'Quality Compliance',
-        description: 'IEC and UL compliant manufacturing',
+        description: 'IEC and UL compliant manufacturing process',
         features: ['IEC standards', 'UL compliance', 'Safety standards', 'Quality certification']
       },
       {
@@ -1396,7 +1406,9 @@ const ServiceDetail = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
                   viewport={{ once: true }}
-                  className="relative flex items-center"
+                  className={`relative flex items-center ${
+                                index % 2 !== 0 ? "md:flex-row-reverse" : ""
+                                }`}
                 >
                   {/* Content Card */}
                   <motion.div
@@ -1457,7 +1469,7 @@ const ServiceDetail = () => {
                   </motion.div>
 
                   {/* Empty Space for Alternating Layout */}
-                  <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:ml-auto' : 'md:pr-8'}`} />
+                  <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:ml-auto' : 'md:pr-10'}`} />
                 </motion.div>
               ))}
             </div>

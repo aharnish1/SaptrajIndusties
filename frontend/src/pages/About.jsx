@@ -2,7 +2,7 @@ import React from 'react';
 import aboutBg from "../assets/aboutBg.jpeg";
 
 // IMPORT VIDEO
-const VIDEO = "https://res.cloudinary.com/dtwsq7gdq/video/upload/v1781679389/VIDEO_BG_tpxhoc.mp4";
+const VIDEO = "https://res.cloudinary.com/dtwsq7gdq/video/upload/v1781694341/0615_1_efaa1x.mp4";
 
 const About = () => {
   return (

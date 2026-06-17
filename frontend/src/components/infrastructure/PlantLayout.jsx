@@ -41,7 +41,7 @@ const PlantLayout = ({ facilities }) => {
 
           {/* Map */}
           <div className="lg:col-span-2">
-            <div className="relative overflow-hidden rounded-2xl border border-[#2a2a2a] bg-[#171717] shadow-2xl">
+            <div className="relative  rounded-2xl border border-[#2a2a2a] bg-[#171717] shadow-2xl">
 
               {/* Plant Layout Image */}
               <img

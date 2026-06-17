@@ -33,6 +33,7 @@ import Raw2 from '../assets/infrastructurePhotoes/Raw2.jpeg';
 import SandBlasting1 from '../assets/infrastructurePhotoes/SandBlasting1.jpeg';
 import SandBlasting2 from '../assets/infrastructurePhotoes/SandBlasting2.jpeg';
 import SandBlasting3 from '../assets/infrastructurePhotoes/SandBlasting3.jpeg';
+import SandBlasting4 from '../assets/infrastructurePhotoes/SandBlasting4.png';
 import Scrap1 from '../assets/infrastructurePhotoes/Scrap1.jpeg';
 import Scrap2 from '../assets/infrastructurePhotoes/Scrap2.jpeg';
 import Crane from '../assets/infrastructurePhotoes/Crane.png';
@@ -426,9 +427,9 @@ const Infrastructure = () => {
     },
 
     {
-      id: "raw-material-left",
-      name: "Raw Materials",
-      image: Raw2,
+      id: "complete-work-left",
+      name: "Complete Work",
+      image: CompleteWork1,
       position: {
         top: "24%",
         left: "36.5%",
@@ -438,9 +439,9 @@ const Infrastructure = () => {
     },
 
     {
-      id: "raw-material-center",
-      name: "Raw Materials",
-      image: Raw1,
+      id: "complete-work-center",
+      name: "Complete Work",
+      image: CompleteWork3,
       position: {
         top: "24%",
         left: "42.1%",
@@ -450,21 +451,21 @@ const Infrastructure = () => {
     },
 
     {
-      id: "raw-material-right",
-      name: "Raw Materials",
-      image: Raw2,
+      id: "welding-station-right",
+      name: "Welding Station",
+      image: Welding,
       position: {
         top: "24%",
         left: "47.6%",
         width: "4%",
-        height: "18.5%"
+        height: "19.6%"
       }
     },
 
     {
       id: "raw-material-bottom",
       name: "Raw Materials",
-      image: CompleteWork2,
+      image: Raw1,
       position: {
         top: "55%",
         left: "29.7%",
@@ -476,7 +477,7 @@ const Infrastructure = () => {
     {
       id: "raw-material-bottom-bottom",
       name: "Raw Materials",
-      image: CompleteWork3,
+      image: Raw2,
       position: {
         top: "63%",
         left: "29.7%",
@@ -500,9 +501,9 @@ const Infrastructure = () => {
     },
 
     {
-      id: "sand-blasting",
-      name: "Sand Blasting",
-      image: SandBlasting1,
+      id: "shot-blasting",
+      name: "Shot Blasting",
+      image: SandBlasting4,
       description:
         "Controlled surface treatment facility ensuring thorough rust removal and superior surface quality prior to painting.",
       position: {
@@ -536,7 +537,7 @@ const Infrastructure = () => {
       position: {
         top: "31%",
         left: "67.5%",
-        width: "4%",
+        width: "3.7%",
         height: "15%",
       },
     },

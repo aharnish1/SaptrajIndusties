@@ -15,7 +15,7 @@ import Infrastructure from './pages/Infrastructure';
 import Quality from './pages/Quality';
 import Contact from './pages/Contact';
 import Quote from './pages/Quote';
-import Gallery from './pages/Gallery';
+
 import Projects from './pages/Projects';
 import Careers from './pages/Careers';
 import Certifications from './pages/Certifications';
@@ -48,7 +48,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/contact-us" element={<Contact />} />
               <Route path="/quote" element={<Quote />} />
-              <Route path="/gallery" element={<Gallery />} />
+
               <Route path="/projects" element={<Projects />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/certifications" element={<Certifications />} />

@@ -40,13 +40,7 @@ const Navbar = () => {
     },
     { name: 'Services', path: '/services' },
     { name: 'Products', path: '/products' },
-    { 
-      name: 'Portfolio', 
-      dropdown: [
-        { name: 'Projects', path: '/projects' },
-        { name: 'Gallery', path: '/gallery' }
-      ]
-    },
+    { name: 'Projects', path: '/projects' },
     { name: 'Careers', path: '/careers' },
     { name: 'Contact', path: '/contact' },
   ];

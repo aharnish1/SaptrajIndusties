@@ -82,7 +82,7 @@ const Footer = () => {
                 { name: 'Services', path: '/services' },
                 { name: 'Products', path: '/products' },
                 { name: 'Projects', path: '/projects' },
-                { name: 'Gallery', path: '/gallery' },
+
                 { name: 'Careers', path: '/careers' },
                 { name: 'Contact Us', path: '/contact' }
               ].map((link) => (

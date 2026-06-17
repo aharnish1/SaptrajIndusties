@@ -920,12 +920,12 @@ const serviceData = {
     title: 'Metal Surface Treatment',
     subtitle: 'Advanced Surface Enhancement Technology',
     tagline: 'Surface Protection & Treatment',
-    description: 'Professional surface treatment services including sand blasting, rust removal, polishing, and chemical treatment for industrial components.',
+    description: 'Professional surface treatment services including shot blasting, rust removal, polishing, and chemical treatment for industrial components.',
     heroImage: SandBlasting1,
     model: '/models/surface-treatment-machine.glb',
 
     features: [
-      'Sand blasting',
+      'Shot blasting',
       'Rust removal',
       'Chemical treatment',
       'Surface polishing',
